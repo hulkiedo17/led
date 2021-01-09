@@ -1,0 +1,46 @@
+
+ifeq ($(DEBUG), TRUE)
+	CFLAGS := -Wall -Werror -Wextra -pedantic -O0 -g
+else
+	CFLAGS := -O3
+endif
+CFLAGS += -std=c99 -MMD
+
+CC := gcc
+LDFLAGS += # none
+LDLIBS += # none
+SRC_DIRS := src include
+VPATH := $(SRC_DIRS)
+OBJ := $(patsubst src/%.c, bin/%.c, $(wildcard src/*.c))
+OBJ := $(OBJ:.c=.o)
+EXEC := led
+
+.PHONY: all
+all: bin/$(EXEC)
+
+bin/$(EXEC): $(OBJ)
+	$(CC) $(LDFLAGS) $^ -o $@
+
+bin/%.o: %.c include/%.h
+	$(CC) $(CFLAGS) -c $< -o $@
+
+include $(wildcard bin/*.d)
+
+.PHONY: install
+install: bin/$(EXEC)
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp $< $(DESTDIR)$(PREFIX)/bin/$(EXEC)
+
+
+.PHONY: uninstall
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(EXEC)
+
+.PHONY: clean
+clean:
+	rm -rf $(OBJ) bin/$(EXEC)
+
+.PHONY: cleandep
+cleandep:
+	rm -rf bin/*.d
+

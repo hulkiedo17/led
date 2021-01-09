@@ -1,0 +1,24 @@
+a - add data to buffer
+
+c - clean data in buffer
+
+q - quit from editor (if you save of clean data from buffer)
+
+p - print data in buffer
+
+w - write data to file (requires an option(filename): w test.txt)
+
+wa - append data to file (reqires an option(filename): wa test.txt)
+
+pf - print filename (show the data in global variable for filename)
+
+sf - set filename (set the filename in global variable, that uses 
+this commands: w, wa, pf)
+special behaviour: (if global variable is set, you can omit the 
+filename as an argument in this commands: w, wa, pf)
+
+sp - set prompt
+
+fb - fill buffer (put the filename as an argument or set the filename
+using sf command)
+

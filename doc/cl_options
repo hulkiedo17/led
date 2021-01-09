@@ -1,0 +1,6 @@
+--help (-h) - help message
+
+--version (-v) - version of program
+
+--filename (-f) - set filename by default in program
+

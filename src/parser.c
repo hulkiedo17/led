@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include "../include/parser.h"
+#include "../include/misc.h"
+
+static const char* command_list[] = {
+	"a", "c", "q", "p", "w", "wa", "pf", "sf", "sp", "fb"
+};
+
+char* arg_for_command = NULL;
+static uint8_t command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+
+command_type_t command_parser(char* input_buffer)
+{
+	char *token1_command = NULL;
+    char *token2_argument = NULL;
+	command_type_t command_token = UNKNOWN;
+
+	token1_command = strtok(input_buffer, " ");
+	token2_argument = strtok(NULL, " ");
+
+	if(token1_command != NULL)
+		command_token = get_command_token(token1_command);		
+
+	if((command_argument_flag != COMMAND_DONT_REQUIRES_AN_ARG) && (token2_argument != NULL))
+	{
+		if(arg_for_command != NULL)
+			free(arg_for_command);
+
+		arg_for_command = malloc((strlen(token2_argument) + 1) * sizeof(char));
+		if(arg_for_command == NULL)
+			fail("parse_command(): allocation error");
+
+		strncpy(arg_for_command, token2_argument, strlen(token2_argument) + 1);
+	}
+
+    free(input_buffer);
+	return command_token;
+}
+
+command_type_t get_command_token(char *token)
+{
+	if(token == NULL)
+		fail("get_command_token(): null pointer");
+
+    if(strcmp(token, command_list[0]) == 0) {
+        command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+        return APPEND;
+    } else if(strcmp(token, command_list[1]) == 0) {
+        command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return CLEAN;
+	} else if(strcmp(token, command_list[2]) == 0) {
+        command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return QUIT;
+	} else if(strcmp(token, command_list[3]) == 0) {
+        command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+        return PRINT_BUF;
+    } else if(strcmp(token, command_list[4]) == 0) {
+        command_argument_flag = COMMAND_REQUIRES_AN_ARG;
+        return WRITE;
+    } else if(strcmp(token, command_list[5]) == 0) {
+        command_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		return WRITE_A;
+    } else if(strcmp(token, command_list[6]) == 0) {
+        command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+        return PRINT_FN;
+    } else if(strcmp(token, command_list[7]) == 0) {
+		command_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		return SET_FILENAME;
+	} else if(strcmp(token, command_list[8]) == 0) {
+		command_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		return SET_PROMPT;
+	} else if(strcmp(token, command_list[9]) == 0) {
+		command_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		return FILL_BUF;
+	}
+
+	return UNKNOWN;
+}
