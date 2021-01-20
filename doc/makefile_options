@@ -1,0 +1,8 @@
+install - install program to default(or not) */bin/* path
+
+uninstall - delete program from default(or not) */bin/* path
+
+clean - remove object files from default build directory in project
+
+cleandep - remove *.dep files from default build directory in project
+

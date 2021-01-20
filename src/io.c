@@ -19,6 +19,7 @@ char* read_from_stream(FILE* stream, int with_new_line_flag)
 	while(1) {
 		c = fgetc(stream);
 
+	// if we set the new_line_flag, so we should to read file
 	if(with_new_line_flag == SET_NEW_LINE_FLAG) {
             if(c == EOF) {
                 input_buffer[position] = '\0';
@@ -27,6 +28,7 @@ char* read_from_stream(FILE* stream, int with_new_line_flag)
                 input_buffer[position] = c;
             }
         } else {
+			// else, we read from stdin
             if(c == EOF || c == '\n') {
                 input_buffer[position] = '\0';
                 return input_buffer;
@@ -37,6 +39,7 @@ char* read_from_stream(FILE* stream, int with_new_line_flag)
 
 		position++;
 
+		// typically reallocation for memory
 		if(position >= input_buffer_size) {
 			input_buffer_size += IBUF_SIZE;
 			input_buffer = realloc(input_buffer, input_buffer_size);
@@ -58,11 +61,6 @@ int read_from_file(char *buffer, size_t size, FILE* fp)
 
 FILE* open_file(char *filename, char *mode)
 {
-    if(!is_valid_filename(filename)) {
-        printf("invalid filename\n");
-        return NULL;
-    }
-
     FILE* fp = fopen(filename, mode);
     if(fp == NULL)
         return NULL;

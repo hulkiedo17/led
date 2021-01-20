@@ -12,3 +12,4 @@ int read_from_file(char *buffer, size_t size, FILE* fp);
 FILE* open_file(char *filename, char *mode);
 
 #endif
+

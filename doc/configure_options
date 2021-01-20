@@ -1,0 +1,8 @@
+--help - shows the short reference to all command-line options for configure file
+
+--enable-debug - include debug symbols in makefile
+
+--disable-debug - do not include debug symbols in makefile
+
+--prefix=<path> - set the installation path prefix (for "sudo make install" command)
+

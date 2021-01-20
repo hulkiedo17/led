@@ -3,10 +3,10 @@
 #include <string.h>
 #include "../include/misc.h"
 
-static char* program_version = "0.1";
 char* filename_global = NULL;
 char* prompt_pointer = NULL;
 const char* default_prompt = ">";
+static char* program_version = "0.1";
 
 void fail(const char *string)
 {
@@ -96,17 +96,6 @@ char* duplicate_string(char *str)
     return dup;
 }
 
-int is_valid_filename(char *fn)
-{
-    if(fn == NULL)
-        fail("is_valid_filename(): null pointer");
-
-    if(!strchr(fn, '/'))
-        return 1;
-    else
-        return 0;
-}
-
 void set_filename(char *string)
 {
     if(string == NULL)
@@ -114,11 +103,6 @@ void set_filename(char *string)
 
     if(filename_global != NULL)
         free(filename_global);
-
-    if(!is_valid_filename(string)) {
-        printf("not valid filename, please type another name\n");
-        return;
-    }
 
     filename_global = duplicate_string(string);
     if(filename_global == NULL)

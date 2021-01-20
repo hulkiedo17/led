@@ -6,7 +6,7 @@
 #include "../include/misc.h"
 
 static const char* command_list[] = {
-	"a", "c", "q", "p", "w", "wa", "pf", "sf", "sp", "fb"
+	"a", "c", "q", "p", "w", "wa", "pf", "sf", "sp", "wb", "pl"
 };
 
 char* arg_for_command = NULL;
@@ -75,6 +75,9 @@ command_type_t get_command_token(char *token)
 	} else if(strcmp(token, command_list[9]) == 0) {
 		command_argument_flag = COMMAND_REQUIRES_AN_ARG;
 		return FILL_BUF;
+	} else if(strcmp(token, command_list[10]) == 0) {
+		command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return PRINT_BUF_WITH_NUM;
 	}
 
 	return UNKNOWN;

@@ -18,7 +18,8 @@ typedef enum command_type {
     PRINT_FN,
     SET_PROMPT,
     SET_FILENAME,
-    FILL_BUF
+    FILL_BUF,
+	PRINT_BUF_WITH_NUM
 } command_type_t;
 
 extern char* arg_for_command;
@@ -27,3 +28,4 @@ command_type_t command_parser(char* input_buffer);
 command_type_t get_command_token(char *token);
 
 #endif
+
