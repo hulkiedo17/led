@@ -49,7 +49,7 @@ static char* reallocate_mem_for_buffer(char *buffer, int old_size, int add_to_ol
 
 static char* choose_filename(char *filename)
 {
-    if(filename == NULL) {
+	if(filename == NULL) {
 		if(filename_global == NULL) {
 			return NULL;
 		}
@@ -57,7 +57,7 @@ static char* choose_filename(char *filename)
 		return filename_global;
 	} 
     
-    return filename;    
+	return filename;
 }
 
 /* NON-STATIC FUNCTIONS: */
@@ -154,11 +154,11 @@ void save_buffer_to_file(char *filename, char *mode)
 	char *current_filename = NULL;
 	int len = buflen(buffer);
 
-    current_filename = choose_filename(filename);
-    if(current_filename == NULL) {
+	current_filename = choose_filename(filename);
+	if(current_filename == NULL) {
 		printf("unknown filename, please type filename\n");
-        return;
-    }
+		return;
+	}
 
 	fp = open_file(current_filename, mode);
 	if(fp == NULL) {
@@ -184,10 +184,10 @@ void fill_buffer_from_file(char *filename)
 	FILE* fp = NULL;
 
 	current_filename = choose_filename(filename);
-    if(current_filename == NULL) {
+	if(current_filename == NULL) {
 		printf("unknown filename, please type filename\n");
-        return;
-    }
+		return;
+	}
 
 	fp = open_file(current_filename, "r+");
 	if(fp == NULL) {

@@ -8,10 +8,10 @@
 #define COMMAND_DONT_REQUIRES_AN_ARG 0
 
 typedef enum command_type {
-	UNKNOWN = 0,
-	QUIT,
-	APPEND,
-	CLEAN,
+    UNKNOWN = 0,
+    QUIT,
+    APPEND,
+    CLEAN,
     PRINT_BUF,
     WRITE,
     WRITE_A,
@@ -19,7 +19,7 @@ typedef enum command_type {
     SET_PROMPT,
     SET_FILENAME,
     FILL_BUF,
-	PRINT_BUF_WITH_NUM
+    PRINT_BUF_WITH_NUM
 } command_type_t;
 
 extern char* arg_for_command;

@@ -19,8 +19,8 @@ char* read_from_stream(FILE* stream, int with_new_line_flag)
 	while(1) {
 		c = fgetc(stream);
 
-	// if we set the new_line_flag, so we should to read file
-	if(with_new_line_flag == SET_NEW_LINE_FLAG) {
+	    // if we set the new_line_flag, so we should to read file
+        if(with_new_line_flag == SET_NEW_LINE_FLAG) {
             if(c == EOF) {
                 input_buffer[position] = '\0';
                 return input_buffer;
@@ -28,7 +28,7 @@ char* read_from_stream(FILE* stream, int with_new_line_flag)
                 input_buffer[position] = c;
             }
         } else {
-			// else, we read from stdin
+            // else, we read from stdin
             if(c == EOF || c == '\n') {
                 input_buffer[position] = '\0';
                 return input_buffer;
