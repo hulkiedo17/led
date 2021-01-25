@@ -11,6 +11,7 @@ typedef enum command_type {
     UNKNOWN = 0,
     QUIT,
     APPEND,
+    APPEND_NL,
     CLEAN,
     PRINT_BUF,
     WRITE,
@@ -19,10 +20,13 @@ typedef enum command_type {
     SET_PROMPT,
     SET_FILENAME,
     FILL_BUF,
-    PRINT_BUF_WITH_NUM
+    PRINT_BUF_WITH_NUM,
+    INSERT,
+    INSERT_NL
 } command_type_t;
 
-extern char* arg_for_command;
+extern char* first_arg_for_command;
+extern char* second_arg_for_command;
 
 command_type_t command_parser(char* input_buffer);
 command_type_t get_command_token(char *token);

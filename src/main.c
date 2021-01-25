@@ -61,41 +61,44 @@ int main(int argc, char **argv)
 		// find the required token and execute the command
 		switch(user_command) {
 		case APPEND:
-			add_data_to_buffer();
-			is_data_saved_flag = DATA_NO_HAS_BEEN_SAVED;
+			add_data_to_buffer(UNSET_NEW_LINE_FLAG);
+			break;
+		case APPEND_NL:
+			add_data_to_buffer(SET_NEW_LINE_FLAG);
 			break;
 		case CLEAN:
-			if(buffer_allocated_memory_flag == BUFFER_HAS_MEMORY) {
+			if(buffer_allocated_memory_flag == BUFFER_HAS_MEMORY)
 				buffer = clean_buffer();
-				buffer_allocated_memory_flag = BUFFER_HAS_NO_MEMORY;
-				is_data_saved_flag = DATA_HAS_BEEN_SAVED;
-			}
 			break;
 		case PRINT_BUF:
-			line_numbers_flag = WITHOUT_LINE_NUM_IN_OUTPUT;
-			print_buffer();
+			print_buffer(WITHOUT_LINE_NUM_IN_OUTPUT);
 			break;
 		case WRITE:
-			save_buffer_to_file(arg_for_command, "w+");
+			save_buffer_to_file(first_arg_for_command, "w+");
 			break;
 		case WRITE_A:
-			save_buffer_to_file(arg_for_command, "a+");
+			save_buffer_to_file(first_arg_for_command, "a+");
 			break;
 		case PRINT_FN:
 			print_filename();
 			break;
 		case SET_PROMPT:
-			set_prompt(arg_for_command);
+			set_prompt(first_arg_for_command);
 			break;
 		case SET_FILENAME:
-			set_filename(arg_for_command);
+			set_filename(first_arg_for_command);
 			break;
 		case FILL_BUF:
-			fill_buffer_from_file(arg_for_command);
+			fill_buffer_from_file(first_arg_for_command);
 			break;
 		case PRINT_BUF_WITH_NUM:
-			line_numbers_flag = WITH_LINE_NUM_IN_OUTPUT;
-			print_buffer();
+			print_buffer(WITH_LINE_NUM_IN_OUTPUT);
+			break;
+		case INSERT:
+			insert_to_buffer(first_arg_for_command, second_arg_for_command, UNSET_NEW_LINE_FLAG);
+			break;
+		case INSERT_NL:
+			insert_to_buffer(first_arg_for_command, second_arg_for_command, SET_NEW_LINE_FLAG);
 			break;
 		case QUIT:
 			if(is_data_saved_flag == DATA_NO_HAS_BEEN_SAVED && buffer_allocated_memory_flag == BUFFER_HAS_MEMORY) {
@@ -110,8 +113,13 @@ int main(int argc, char **argv)
 			break;
 		}
 
-		free(arg_for_command);
-		arg_for_command = NULL;
+		if(first_arg_for_command != NULL)
+			free(first_arg_for_command);
+		if(second_arg_for_command != NULL)
+			free(second_arg_for_command);
+		
+		first_arg_for_command = NULL;
+		second_arg_for_command = NULL;
 
 		if(quit_flag == SET_QUIT_FLAG)
 			break;
@@ -119,8 +127,11 @@ int main(int argc, char **argv)
 
 	if(buffer != NULL)
 		clean_buffer();
-	if(arg_for_command != NULL)
-		free(arg_for_command);
+	/*
+	if(first_arg_for_command != NULL)
+		free(first_arg_for_command);
+	if(second_arg_for_command != NULL)
+		free(second_arg_for_command);*/
 	if(prompt_pointer != NULL)
 		free(prompt_pointer);
 	if(filename_global != NULL)

@@ -1,6 +1,7 @@
 [main category]:
 
-a - add data to buffer
+a - add data to buffer (with '\n')
+an - add data to the buffer (with ' ')
 c - clean data in buffer
 q - quit from editor (if you save of clean data from buffer)
 
@@ -25,5 +26,8 @@ sf - set filename (set the filename in global variable, that uses this commands:
 special behaviour: (if global variable is set, you can omit the filename as an argument in this commands: w, wa, pf)
 sp - set prompt
 
+[i category]:
 
-
+i - insert data to the specified position (without '\n')(usage: i 0 hello_world)
+in - insert data to the specified position (with '\n')(usage: in $ test_string_without_spaces)
+(specified symbols: . = begin of buffer, $ = end of buffer, % = mid of buffer)

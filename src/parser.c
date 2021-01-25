@@ -6,16 +6,20 @@
 #include "../include/misc.h"
 
 static const char* command_list[] = {
-	"a", "c", "q", "p", "w", "wa", "pf", "sf", "sp", "wb", "pl"
+	"a", "an", "c", "q", "p", "w", "wa", 
+	"pf", "sf", "sp", "wb", "pl", "i", "in"
 };
 
-char* arg_for_command = NULL;
-static uint8_t command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+char* first_arg_for_command = NULL;
+char* second_arg_for_command = NULL;
+static uint8_t command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+static uint8_t command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
 
 command_type_t command_parser(char* input_buffer)
 {
 	char *token1_command = NULL;
-	char *token2_argument = NULL;
+	char *token2_argument_1 = NULL;
+	char *token3_argument_2 = NULL;
 	command_type_t command_token = UNKNOWN;
 
 	/*
@@ -31,21 +35,34 @@ command_type_t command_parser(char* input_buffer)
 	*/
 
 	token1_command = strtok(input_buffer, " ");
-	token2_argument = strtok(NULL, " ");
+	token2_argument_1 = strtok(NULL, " ");
+	token3_argument_2 = strtok(NULL, " ");
 
 	if(token1_command != NULL)
 		command_token = get_command_token(token1_command);		
 
-	if((command_argument_flag != COMMAND_DONT_REQUIRES_AN_ARG) && (token2_argument != NULL))
+	if((command_first_argument_flag != COMMAND_DONT_REQUIRES_AN_ARG) && (token2_argument_1 != NULL))
 	{
-		if(arg_for_command != NULL)
-			free(arg_for_command);
+		if(first_arg_for_command != NULL)
+			free(first_arg_for_command);
 
-		arg_for_command = malloc((strlen(token2_argument) + 1) * sizeof(char));
-		if(arg_for_command == NULL)
-			fail("parse_command(): allocation error");
+		first_arg_for_command = malloc((strlen(token2_argument_1) + 1) * sizeof(char));
+		if(first_arg_for_command == NULL)
+			fail("command_parser(): allocation error");
 
-		strncpy(arg_for_command, token2_argument, strlen(token2_argument) + 1);
+		strncpy(first_arg_for_command, token2_argument_1, strlen(token2_argument_1) + 1);
+	}
+
+	if((command_second_argument_flag != COMMAND_DONT_REQUIRES_AN_ARG) && (token3_argument_2 != NULL))
+	{
+		if(second_arg_for_command != NULL)
+			free(second_arg_for_command);
+
+		second_arg_for_command = malloc((strlen(token3_argument_2) + 1) * sizeof(char));
+		if(second_arg_for_command == NULL)
+			fail("command_parser(): allocation error");
+
+		strncpy(second_arg_for_command, token3_argument_2, strlen(token3_argument_2) + 1);
 	}
 
 	free(input_buffer);
@@ -65,38 +82,61 @@ command_type_t get_command_token(char *token)
 		and returns a constant with the command number.
 	*/
 	if(strcmp(token, command_list[0]) == 0) {
-		command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
-		return APPEND;
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return APPEND_NL;
 	} else if(strcmp(token, command_list[1]) == 0) {
-		command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
-		return CLEAN;
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return APPEND;
 	} else if(strcmp(token, command_list[2]) == 0) {
-		command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
-		return QUIT;
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return CLEAN;
 	} else if(strcmp(token, command_list[3]) == 0) {
-		command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
-		return PRINT_BUF;
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return QUIT;
 	} else if(strcmp(token, command_list[4]) == 0) {
-		command_argument_flag = COMMAND_REQUIRES_AN_ARG;
-		return WRITE;
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return PRINT_BUF;
 	} else if(strcmp(token, command_list[5]) == 0) {
-		command_argument_flag = COMMAND_REQUIRES_AN_ARG;
-		return WRITE_A;
+		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return WRITE;
 	} else if(strcmp(token, command_list[6]) == 0) {
-		command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
-		return PRINT_FN;
+		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return WRITE_A;
 	} else if(strcmp(token, command_list[7]) == 0) {
-		command_argument_flag = COMMAND_REQUIRES_AN_ARG;
-		return SET_FILENAME;
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return PRINT_FN;
 	} else if(strcmp(token, command_list[8]) == 0) {
-		command_argument_flag = COMMAND_REQUIRES_AN_ARG;
-		return SET_PROMPT;
+		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return SET_FILENAME;
 	} else if(strcmp(token, command_list[9]) == 0) {
-		command_argument_flag = COMMAND_REQUIRES_AN_ARG;
-		return FILL_BUF;
+		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return SET_PROMPT;
 	} else if(strcmp(token, command_list[10]) == 0) {
-		command_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return FILL_BUF;
+	} else if(strcmp(token, command_list[11]) == 0) {
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
 		return PRINT_BUF_WITH_NUM;
+	} else if(strcmp(token, command_list[12]) == 0) {
+		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		return INSERT;
+	} else if(strcmp(token, command_list[13]) == 0) {
+		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		return INSERT_NL;
 	}
 
 	return UNKNOWN;

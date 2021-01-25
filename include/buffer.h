@@ -12,13 +12,13 @@
 
 extern uint8_t buffer_allocated_memory_flag;
 extern uint8_t is_data_saved_flag;
-extern uint8_t line_numbers_flag;
 
-void add_data_to_buffer(void);
+void add_data_to_buffer(uint8_t nl_flag);
 char* clean_buffer(void);
-void print_buffer(void);
+void print_buffer(uint8_t line_num_flag);
 void save_buffer_to_file(char *filename, char *mode);
 void fill_buffer_from_file(char *filename);
+char* insert_to_buffer(char* where, char *data, int nl_flag);
 
 #endif
 
