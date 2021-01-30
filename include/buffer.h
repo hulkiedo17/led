@@ -1,24 +1,14 @@
 #ifndef BUFFER_H
 #define BUFFER_H
 
-#define BUFFER_HAS_MEMORY 1
-#define BUFFER_HAS_NO_MEMORY 0
-
-#define DATA_HAS_BEEN_SAVED 1
-#define DATA_NO_HAS_BEEN_SAVED 0
-
-#define WITH_LINE_NUM_IN_OUTPUT 1
-#define WITHOUT_LINE_NUM_IN_OUTPUT 0
-
-extern uint8_t buffer_allocated_memory_flag;
-extern uint8_t is_data_saved_flag;
-
-void add_data_to_buffer(uint8_t nl_flag);
-char* clean_buffer(void);
-void print_buffer(uint8_t line_num_flag);
-void save_buffer_to_file(char *filename, char *mode);
-void fill_buffer_from_file(char *filename);
-char* insert_to_buffer(char* where, char *data, int nl_flag);
+int buflen(char *buffer);
+bool is_buffer_empty(void);
+int get_buffer_size(void);
+char* allocate_mem_for_buffer(int size);
+char* reallocate_mem_for_buffer(char *buffer, int old_size, int add_to_old_size);
+int get_position_at_line(int line);
+int get_number_of_lines_in_buffer(void);
+int get_number_of_line_expr(char *pos);
 
 #endif
 

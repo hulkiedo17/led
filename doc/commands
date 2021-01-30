@@ -30,4 +30,4 @@ sp - set prompt
 
 i - insert data to the specified position (without '\n')(usage: i 0 hello_world)
 in - insert data to the specified position (with '\n')(usage: in $ test_string_without_spaces)
-(specified symbols: . = begin of buffer, $ = end of buffer, % = mid of buffer)
+(specified symbols: . = begin of buffer, $ = end of buffer, / = mid of buffer)

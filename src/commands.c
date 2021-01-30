@@ -1,0 +1,350 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "../include/io.h"
+#include "../include/commands.h"
+#include "../include/buffer.h"
+#include "../include/main.h"
+#include "../include/misc.h"
+
+uint8_t buffer_allocated_memory_flag = BUFFER_HAS_NO_MEMORY;
+uint8_t is_data_saved_flag = DATA_HAS_BEEN_SAVED;
+
+char* clean_buffer(void)
+{
+	if(buffer != NULL) {
+		printf("freed memory: %zd bytes\n", strlen(buffer) + 1);
+		free(buffer);
+		buffer = NULL;
+	}
+
+	buffer_allocated_memory_flag = BUFFER_HAS_NO_MEMORY;
+	is_data_saved_flag = DATA_HAS_BEEN_SAVED;
+	
+	return NULL;
+}
+
+void print_buffer(uint8_t line_num_flag)
+{
+	long count_lines = 1;
+
+	if(is_buffer_empty())
+		printf("buffer is empty\n");
+	else {
+		if(line_num_flag == WITH_LINE_NUM_IN_OUTPUT) {
+			/* how works the output with line numbers:
+
+				before the loop, number of the first line is
+				displayed, then the loop goes through the buffer
+				and each character in the array is checked for 
+				equality to a newline character, fi the equality 
+				is true, then the number of the next line is 
+				displayed after it, then it is incremented.
+			*/
+			printf("%ld ", count_lines++);
+			for(long i = 0; i < buflen(buffer); i++) {
+				putchar(buffer[i]);
+				if(buffer[i] == '\n')
+					printf("%ld ", count_lines++);
+			}
+			putchar('\n');
+		} else {
+			printf("%s\n", buffer);
+		}
+	}
+}
+
+void add_data_to_buffer(uint8_t nl_flag)
+{
+	char *input_buffer = NULL;
+	int buffer_size = 0;
+	int input_buffer_size = 0;
+
+	// read line from standard input
+	input_buffer = read_from_stream(stdin, UNSET_NEW_LINE_FLAG);
+	while(strcmp(input_buffer, ".") != 0) {
+		// if buffer doesn't have some data, allocate the memory
+		// and copy data from input_buffer to main buffer
+		if(buffer_allocated_memory_flag == BUFFER_HAS_NO_MEMORY) {
+			input_buffer_size = buflen(input_buffer) + 1;
+			buffer = allocate_mem_for_buffer(input_buffer_size);
+			buffer_allocated_memory_flag = BUFFER_HAS_MEMORY;
+
+			strncpy(buffer, input_buffer, input_buffer_size);
+		} else {
+			// else, if buffer have some data, check the main buffer size,
+			// and then reallocate memory in main buffer, and copy the data
+			// from the input_buffer to the new allocated memory in the main 
+			// buffer.
+			if(nl_flag == SET_NEW_LINE_FLAG)
+				input_buffer_size = buflen(input_buffer) + 1;
+			else
+				input_buffer_size = buflen(input_buffer);
+
+			buffer_size = get_buffer_size();
+			buffer = reallocate_mem_for_buffer(buffer, buffer_size, input_buffer_size);
+
+			if(nl_flag == SET_NEW_LINE_FLAG)
+				strncpy(buffer + buffer_size, input_buffer, input_buffer_size);
+			else
+				strncpy(buffer + buffer_size - 1, input_buffer, input_buffer_size);
+
+			// and don't forget to replace the \0 to \n or without them,
+			// because \0 character in file is not a good practice
+			if(nl_flag == SET_NEW_LINE_FLAG)
+				buffer[buffer_size - 1] = '\n';
+		}
+
+		// free used memory in input_buffer and read new line from standard input
+		free(input_buffer);
+		input_buffer = read_from_stream(stdin, UNSET_NEW_LINE_FLAG);
+	}
+
+	free(input_buffer);
+	is_data_saved_flag = DATA_NO_HAS_BEEN_SAVED;
+}
+
+void save_buffer_to_file(char *filename, char *mode)
+{
+	FILE *fp = NULL;
+	char *current_filename = NULL;
+	int len;
+
+	if((len = get_buffer_size()) == -1) {
+		printf("buffer is empty\n");
+		return;
+	}
+
+	current_filename = choose_filename(filename);
+	if(current_filename == NULL) {
+		printf("unknown filename, please type filename\n");
+		return;
+	}
+
+	fp = open_file(current_filename, mode);
+	if(fp == NULL) {
+		fprintf(stderr, "cannot save buffer - file cannot open or doesn't exists\n");
+		return;
+	}
+
+	/* 
+		one is substracted from the length because we cannot
+		pu a \0 character in the file
+	*/
+	if(write_to_file(buffer, len - 1, fp) < 0)
+		fail("save_buffer_to_file(): write_to_file() failed");
+
+	fclose(fp);
+
+	printf("written %d bytes\n", len);
+	// we saved data to file, so you need to set the flag 
+	is_data_saved_flag = DATA_HAS_BEEN_SAVED;
+}
+
+void fill_buffer_from_file(char *filename)
+{
+	int len_buffer, len_temp_buffer;
+	char* temporary_buffer = NULL;
+	char *current_filename = NULL;
+	FILE* fp = NULL;
+
+	current_filename = choose_filename(filename);
+	if(current_filename == NULL) {
+		printf("unknown filename, please type filename\n");
+		return;
+	}
+
+	fp = open_file(current_filename, "r+");
+	if(fp == NULL) {
+		fprintf(stderr, "cannot open %s file\n", current_filename);
+		return;
+	}
+
+	temporary_buffer = read_from_stream(fp, SET_NEW_LINE_FLAG);
+	fclose(fp);
+
+	if((len_buffer = get_buffer_size()) == -1) {
+		len_buffer = 0;
+	}
+
+	// reallocate memory in main buffer for data in 
+	// temporary_buffer, and then copy to main buffer
+	len_temp_buffer = strlen(temporary_buffer) + 1;
+	buffer = realloc(buffer, len_buffer + len_temp_buffer);
+	if(buffer == NULL)
+		fail("fill_buffer_from_file(): reallocation error");
+
+	strncpy(buffer + len_buffer, temporary_buffer, len_temp_buffer);
+
+	// don't forget to replace the \0 to \n character
+	if(len_buffer == 0) {
+		buffer_allocated_memory_flag = BUFFER_HAS_MEMORY;
+	} else {
+		buffer[len_buffer - 1] = '\n';
+	}
+
+	// because we add data from file, so you need to set the flag
+	is_data_saved_flag = DATA_NO_HAS_BEEN_SAVED;
+}
+
+char* insert_to_buffer(char* where, char *data, int nl_flag)
+{
+	if(where == NULL || data == NULL) {
+		printf("insert(): null options pointers\n");
+		return buffer;
+	}
+
+	char *temp_buf = NULL;
+	int position, buf_len;
+	size_t data_len;
+
+	if(nl_flag == UNSET_NEW_LINE_FLAG)
+		data_len = buflen(data);
+	else
+		data_len = buflen(data) + 1;	
+
+	if(buffer_allocated_memory_flag == BUFFER_HAS_MEMORY) {
+		if((buf_len = get_buffer_size()) == -1) {
+			fprintf(stderr, "insert_to_buffer(): get_buffer_size() failed\n");
+			return buffer;
+		}
+	}
+
+	/* 
+		expansion the . and $ reserved symbols to the 
+		digit position in buffer
+	*/
+	if((position = expand_pos_expr(where)) == -1) {
+		position = strtol(where, NULL, 10);
+	}
+
+	if(buffer_allocated_memory_flag == BUFFER_HAS_MEMORY) {
+		/* 
+			checking for the possibility to insert data at the
+			specified position
+		*/
+		if(position < 0 || position >= buf_len) {
+			printf("insert(): out of buffer\n");
+			return buffer;
+		}
+
+		temp_buf = allocate_mem_for_buffer(data_len + buf_len);
+
+		/* 
+			1 strncpy - inserting data from the buffer into a temporary buffer
+			up to the position after which other data should be inserted
+			2 strncpy - inserting other data into a temporary buffer
+			3 strncpy - inserting the remainder of the buffer data into a 
+			temporary buffer
+		*/
+		strncpy(temp_buf, buffer, position);
+		strncpy(temp_buf + position, data, data_len);
+		strncpy(temp_buf + position + data_len, buffer + position, buf_len - position);
+
+		/* 
+			replacing the \0 char with a \n character or insert without them
+			so that there are no conflicts when working with the buffer.
+		*/
+		if(nl_flag == SET_NEW_LINE_FLAG) {
+			temp_buf[position + data_len - 1] = '\n';
+		}
+
+		/* 
+			freeing data in the buffer and allocating new memory for copying
+			to the data buffer from the temporary buffer
+		*/
+		free(buffer);
+		buffer = allocate_mem_for_buffer(data_len + buf_len);
+		strncpy(buffer, temp_buf, data_len + buf_len);
+		free(temp_buf);
+	} else {
+		/* 
+			if there is no data in the buffer, then just add this data to the buffer,
+			regardless of the specified position when calling the command
+		*/
+		buffer = allocate_mem_for_buffer(data_len);
+		strncpy(buffer, data, data_len);
+		buffer_allocated_memory_flag = BUFFER_HAS_MEMORY;
+	}
+
+	is_data_saved_flag = DATA_NO_HAS_BEEN_SAVED;
+	return buffer;
+}
+
+char* delete_line(char* pos)
+{
+	int line_num, start_position, end_position, bufsize, temp_buffer_len, number_of_lines;
+	char* temp_buffer = NULL;
+
+	if((bufsize = get_buffer_size()) == -1) {
+		fprintf(stderr, "buffer is empty\n");
+		return buffer;
+	}
+
+	if(pos == NULL) {
+		fprintf(stderr, "delete_line(): null option pointer(char* pos)\n");
+		return buffer;
+	}
+
+	number_of_lines = get_number_of_lines_in_buffer();
+	line_num = get_number_of_line_expr(pos);
+
+	/* 
+		1) if the reqired line is in the range from 1 to number_of_lines - 1, 
+		then you can easily find the position of the beginning and end of the
+		string in the buffer using the function
+		2) if the desired line is the last one in the buffer, then the starting
+		position is as before, but the last position will be found simply by
+		finding the size of the buffer
+		3) if the required line is not in the buffer (outside the range of lines),
+		then a message is displayed and the functuin is exited
+	*/
+	if(line_num < number_of_lines && line_num > 0) {
+		if((start_position = get_position_at_line(line_num)) == -1) {
+			return buffer;
+		}
+
+		if((end_position = get_position_at_line(line_num + 1)) == -1) {
+			return buffer;
+		}
+	} else if(line_num == number_of_lines) {
+		if((start_position = get_position_at_line(line_num)) == -1) {
+			return buffer;
+		}
+
+		end_position = get_buffer_size();
+	} else {
+		printf("out of lines\n");
+		return buffer;
+	}
+
+	temp_buffer_len = bufsize - (end_position - start_position);
+	if(temp_buffer_len > 0) {
+		temp_buffer = allocate_mem_for_buffer(temp_buffer_len);
+	} else {
+		// if temp_buffer_len == 0, then we need to clean the entire buffer
+		buffer = clean_buffer();
+		return buffer;
+	}
+
+	strncpy(temp_buffer, buffer, start_position);
+
+	if(line_num < number_of_lines) {
+		// if we delete not the last line, then you need to copy the rest of the buffer
+		strncpy(temp_buffer + start_position, buffer + end_position, bufsize - end_position);
+	} else {
+		// if we delete the last line, just put \0
+		temp_buffer[start_position - 1] = '\0';
+	}
+
+	free(buffer);
+	buffer = allocate_mem_for_buffer(temp_buffer_len);
+	strncpy(buffer, temp_buffer, temp_buffer_len);
+
+	free(temp_buffer);
+
+	is_data_saved_flag = DATA_NO_HAS_BEEN_SAVED;
+	return buffer;
+}

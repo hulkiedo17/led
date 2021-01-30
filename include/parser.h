@@ -22,7 +22,10 @@ typedef enum command_type {
     FILL_BUF,
     PRINT_BUF_WITH_NUM,
     INSERT,
-    INSERT_NL
+    INSERT_NL,
+    DELETE_LINE,
+    BASIC_HELP,
+    CLEAN_SCREEN
 } command_type_t;
 
 extern char* first_arg_for_command;

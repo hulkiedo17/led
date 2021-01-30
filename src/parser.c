@@ -6,8 +6,9 @@
 #include "../include/misc.h"
 
 static const char* command_list[] = {
-	"a", "an", "c", "q", "p", "w", "wa", 
-	"pf", "sf", "sp", "wb", "pl", "i", "in"
+	"a", "an", "c", "q", "p", "w", 
+	"wa", "pf", "sf", "sp", "wb", "pl", 
+	"i", "in", "dl", "h", "cs"
 };
 
 char* first_arg_for_command = NULL;
@@ -137,6 +138,18 @@ command_type_t get_command_token(char *token)
 		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
 		command_second_argument_flag = COMMAND_REQUIRES_AN_ARG;
 		return INSERT_NL;
+	} else if(strcmp(token, command_list[14]) == 0) {
+		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return DELETE_LINE;
+	} else if(strcmp(token, command_list[15]) == 0) {
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return BASIC_HELP;
+	} else if(strcmp(token, command_list[16]) == 0) {
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return CLEAN_SCREEN;
 	}
 
 	return UNKNOWN;
