@@ -18,7 +18,9 @@ char* clean_buffer(void);
 void print_buffer(uint8_t line_num_flag);
 void save_buffer_to_file(char *filename, char *mode);
 void fill_buffer_from_file(char *filename);
-char* insert_to_buffer(char* where, char *data, int nl_flag);
-char* delete_line(char* pos);
+char* insert_to_buffer(int position, char *data, int nl_flag);
+char* delete_line(int line_num);
+char* delete_range(char* start_pos, char* end_pos);
+char* insert_after_line(char* line, char* data, int nl_flag);
 
 #endif

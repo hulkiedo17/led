@@ -15,7 +15,7 @@ uint8_t is_data_saved_flag = DATA_HAS_BEEN_SAVED;
 char* clean_buffer(void)
 {
 	if(buffer != NULL) {
-		printf("freed memory: %zd bytes\n", strlen(buffer) + 1);
+		printf("freed memory: %d bytes\n", buflen(buffer) + 1);
 		free(buffer);
 		buffer = NULL;
 	}
@@ -29,6 +29,7 @@ char* clean_buffer(void)
 void print_buffer(uint8_t line_num_flag)
 {
 	long count_lines = 1;
+	long number_of_lines = get_number_of_lines_in_buffer();
 
 	if(is_buffer_empty())
 		printf("buffer is empty\n");
@@ -37,18 +38,39 @@ void print_buffer(uint8_t line_num_flag)
 			/* how works the output with line numbers:
 
 				before the loop, number of the first line is
-				displayed, then the loop goes through the buffer
-				and each character in the array is checked for 
-				equality to a newline character, fi the equality 
-				is true, then the number of the next line is 
-				displayed after it, then it is incremented.
+				displayed(the number of lines is taken into 
+				account for a more beautiful output), then 
+				the loop goes through the buffer and each 
+				character in the array is checked for equality 
+				to a newline character, if the equality is true, 
+				then the number of the next line is displayed 
+				after it, then it is incremented.
 			*/
-			printf("%ld ", count_lines++);
+
+			if(number_of_lines < 10) {
+				printf("%ld ", count_lines);
+			} else if(number_of_lines >= 10 && number_of_lines < 100) {
+				printf("%2ld ", count_lines);
+			} else if(number_of_lines >= 100 && number_of_lines < 1000) {
+				printf("%3ld ", count_lines);
+			}
+			count_lines++;
+
 			for(long i = 0; i < buflen(buffer); i++) {
 				putchar(buffer[i]);
-				if(buffer[i] == '\n')
-					printf("%ld ", count_lines++);
+
+				if(buffer[i] == '\n') {
+					if(number_of_lines < 10) {
+						printf("%ld ", count_lines);
+					} else if(number_of_lines >= 10 && number_of_lines < 100) {
+						printf("%2ld ", count_lines);
+					} else if(number_of_lines >= 100 && number_of_lines < 1000) {
+						printf("%3ld ", count_lines);
+					}
+					count_lines++;
+				}
 			}
+
 			putchar('\n');
 		} else {
 			printf("%s\n", buffer);
@@ -185,19 +207,21 @@ void fill_buffer_from_file(char *filename)
 		buffer[len_buffer - 1] = '\n';
 	}
 
+	free(temporary_buffer);
+
 	// because we add data from file, so you need to set the flag
 	is_data_saved_flag = DATA_NO_HAS_BEEN_SAVED;
 }
 
-char* insert_to_buffer(char* where, char *data, int nl_flag)
+char* insert_to_buffer(int position, char *data, int nl_flag)
 {
-	if(where == NULL || data == NULL) {
+	if(data == NULL) {
 		printf("insert(): null options pointers\n");
 		return buffer;
 	}
 
 	char *temp_buf = NULL;
-	int position, buf_len;
+	int buf_len;
 	size_t data_len;
 
 	if(nl_flag == UNSET_NEW_LINE_FLAG)
@@ -210,14 +234,6 @@ char* insert_to_buffer(char* where, char *data, int nl_flag)
 			fprintf(stderr, "insert_to_buffer(): get_buffer_size() failed\n");
 			return buffer;
 		}
-	}
-
-	/* 
-		expansion the . and $ reserved symbols to the 
-		digit position in buffer
-	*/
-	if((position = expand_pos_expr(where)) == -1) {
-		position = strtol(where, NULL, 10);
 	}
 
 	if(buffer_allocated_memory_flag == BUFFER_HAS_MEMORY) {
@@ -273,9 +289,33 @@ char* insert_to_buffer(char* where, char *data, int nl_flag)
 	return buffer;
 }
 
-char* delete_line(char* pos)
+char* insert_after_line(char* line, char* data, int nl_flag)
 {
-	int line_num, start_position, end_position, bufsize, temp_buffer_len, number_of_lines;
+	int number_of_line, position, all_lines;
+
+	if((number_of_line = expand_line_expr(line)) == -1) {
+		number_of_line = strtol(line, NULL, 10);
+	}
+
+	all_lines = get_number_of_lines_in_buffer();
+	if(number_of_line <= 0 && number_of_line > all_lines) {
+		printf("out of lines\n");
+		return buffer;
+	}
+
+	if(number_of_line == all_lines) {
+		position = get_buffer_size() - 1;
+	} else {
+		position = get_position_at_line(number_of_line + 1);
+	}
+
+	buffer = insert_to_buffer(position, data, nl_flag);
+	return buffer;
+}
+
+char* delete_line(int line_num)
+{
+	int start_position, end_position, bufsize, temp_buffer_len, number_of_lines;
 	char* temp_buffer = NULL;
 
 	if((bufsize = get_buffer_size()) == -1) {
@@ -283,13 +323,7 @@ char* delete_line(char* pos)
 		return buffer;
 	}
 
-	if(pos == NULL) {
-		fprintf(stderr, "delete_line(): null option pointer(char* pos)\n");
-		return buffer;
-	}
-
 	number_of_lines = get_number_of_lines_in_buffer();
-	line_num = get_number_of_line_expr(pos);
 
 	/* 
 		1) if the reqired line is in the range from 1 to number_of_lines - 1, 
@@ -325,7 +359,10 @@ char* delete_line(char* pos)
 		temp_buffer = allocate_mem_for_buffer(temp_buffer_len);
 	} else {
 		// if temp_buffer_len == 0, then we need to clean the entire buffer
-		buffer = clean_buffer();
+		free(buffer);
+		buffer = NULL;
+		buffer_allocated_memory_flag = BUFFER_HAS_NO_MEMORY;
+		is_data_saved_flag = DATA_HAS_BEEN_SAVED;
 		return buffer;
 	}
 
@@ -346,5 +383,52 @@ char* delete_line(char* pos)
 	free(temp_buffer);
 
 	is_data_saved_flag = DATA_NO_HAS_BEEN_SAVED;
+	return buffer;
+}
+
+char* delete_range(char* start_pos, char* end_pos)
+{
+	if(start_pos == NULL || end_pos == NULL) {
+		printf("delete_range(): null option pointers\n");
+		return buffer;
+	}
+
+	if(buffer == NULL) {
+		printf("buffer is empty\n");
+		return buffer;
+	}
+
+	int number_of_lines, start_line, end_line;
+
+	number_of_lines = get_number_of_lines_in_buffer();
+	start_line = get_number_of_line_expr(start_pos);
+	end_line = get_number_of_line_expr(end_pos);
+
+	if(start_line > 0 && end_line <= number_of_lines) {
+		if(start_line > end_line) {
+			printf("error in the specified range\n");
+			return buffer;
+		}
+	} else {
+		printf("out of lines\n");
+		return buffer;
+	}
+
+	/*
+		if only one line is specified in the range (that is, from 
+		1 to 1 for example), then only it will be removed from 
+		the buffer
+
+		otherwise, lines in the specified range will be deleted
+		using a loop
+	*/
+	if(start_line == end_line) {
+		buffer = delete_line(start_line);
+	} else {
+		for(int i = 0; i <= (end_line - start_line); i++) {
+			buffer = delete_line(start_line);
+		}
+	}
+
 	return buffer;
 }

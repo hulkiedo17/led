@@ -14,7 +14,7 @@ char* read_from_stream(FILE* stream, int with_new_line_flag)
 	char *input_buffer = malloc(input_buffer_size * sizeof(char));
 
 	if(!input_buffer)
-		fail("read_input(): allocation error");
+		fail("read_from_stream(): allocation error");
 
 	while(1) {
 		c = fgetc(stream);
@@ -44,7 +44,7 @@ char* read_from_stream(FILE* stream, int with_new_line_flag)
 			input_buffer_size += IBUF_SIZE;
 			input_buffer = realloc(input_buffer, input_buffer_size);
 			if(!input_buffer)
-				fail("read_input(): reallocation error");
+				fail("read_from_stream(): reallocation error");
 		}
 	}
 }

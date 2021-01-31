@@ -23,9 +23,12 @@ typedef enum command_type {
     PRINT_BUF_WITH_NUM,
     INSERT,
     INSERT_NL,
+    INSERT_AFTER_LINE,
+    INSERT_AFTER_LINE_NL,
     DELETE_LINE,
     BASIC_HELP,
-    CLEAN_SCREEN
+    CLEAN_SCREEN,
+    DELETE_IN_RANGE
 } command_type_t;
 
 extern char* first_arg_for_command;

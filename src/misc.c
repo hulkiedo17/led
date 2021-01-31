@@ -9,7 +9,7 @@
 char* filename_global = NULL;
 char* prompt_pointer = NULL;
 const char* default_prompt = ">";
-static char* program_version = "0.1";
+static char* program_version = "0.5";
 static const char* line_addr_expr[] = {
 	".", "$", "/"
 };
@@ -45,7 +45,10 @@ void help(void)
     printf("sp [prompt_str] - set prompt\n");
     printf("i [position] [data] - insert data to the buffer at the specified position\n");
     printf("in [position] [data] - same as the previous, but here added \\n at the end of the inserted data\n");
+    printf("il [line] [data] - insert data to the buffer after the specified line\n");
+    printf("iln [line] [data] - same as the previous, but but here added \\n at the end of the inserted data\n");
     printf("dl [line_number] - delete the specified line from the buffer\n");
+    printf("dr [number1] [number2] - delete the lines in the specified range\n");
     printf("h - basic help reference about commands\n");
     printf("cs - clean screen\n");
     putchar(10);
@@ -66,7 +69,10 @@ void basic_command_help(void)
     printf("sp [str] - set prompt\n");
     printf("i [pos] [data] - insert data to the buffer at the specified position\n");
     printf("in [pos] [data] - same as the previous, but here added \\n at the end of the inserted data\n");
+    printf("il [line] [data] - insert data to the buffer after the specified line\n");
+    printf("iln [line] [data] - same as the previous, but but here added \\n at the end of the inserted data\n");
     printf("dl [line] - delete the specified line from the buffer\n");
+    printf("dr [n1] [n2] - delete the lines in the specified range\n");
     printf("h - basic help reference about commands\n");
     printf("cs - clean screen\n");
 }

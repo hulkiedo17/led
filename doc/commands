@@ -4,7 +4,8 @@ a - add data to buffer (with '\n')
 an - add data to the buffer (with ' ')
 c - clean data in buffer
 q - quit from editor (if you save of clean data from buffer)
-
+cs - clean screen
+h - basic help reference about commands
 
 [p category]:
 
@@ -31,3 +32,10 @@ sp - set prompt
 i - insert data to the specified position (without '\n')(usage: i 0 hello_world)
 in - insert data to the specified position (with '\n')(usage: in $ test_string_without_spaces)
 (specified symbols: . = begin of buffer, $ = end of buffer, / = mid of buffer)
+il - insert data to the buffer after the specified line\n");
+iln - same as the previous, but but here added \n at the end of the inserted data
+
+[d category]:
+
+dl - delete the specified line from the buffer
+dr - delete the lines in the specified range

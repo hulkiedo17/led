@@ -3,17 +3,20 @@
 #include <stdint.h>
 #include <string.h>
 #include <getopt.h>
+#include <stdbool.h>
 #include "../include/main.h"
 #include "../include/io.h"
 #include "../include/parser.h"
 #include "../include/commands.h"
 #include "../include/misc.h"
+#include "../include/buffer.h"
 
 char *buffer = NULL;
 
 int main(int argc, char **argv)
 {
 	int result;
+	long temp_val;
 	char *input_buffer = NULL;
 	uint8_t quit_flag = UNSET_QUIT_FLAG;
 	command_type_t user_command = UNKNOWN;
@@ -60,13 +63,14 @@ int main(int argc, char **argv)
 
 		// find the required token and execute the command
 		switch(user_command) {
+		// 'a' group of commands
 		case APPEND_NL:
 			add_data_to_buffer(SET_NEW_LINE_FLAG);
 			break;
 		case APPEND:
 			add_data_to_buffer(UNSET_NEW_LINE_FLAG);
 			break;
-
+		// 'w' group of commands
 		case WRITE:
 			save_buffer_to_file(first_arg_for_command, "w+");
 			break;
@@ -76,7 +80,7 @@ int main(int argc, char **argv)
 		case FILL_BUF:
 			fill_buffer_from_file(first_arg_for_command);
 			break;
-
+		// 'p' group of commands
 		case PRINT_BUF:
 			print_buffer(WITHOUT_LINE_NUM_IN_OUTPUT);
 			break;
@@ -86,25 +90,37 @@ int main(int argc, char **argv)
 		case PRINT_FN:
 			print_filename();
 			break;
-
+		// 's' group of commands
 		case SET_PROMPT:
 			set_prompt(first_arg_for_command);
 			break;
 		case SET_FILENAME:
 			set_filename(first_arg_for_command);
 			break;
-
+		// 'i' group of commands
 		case INSERT:
-			insert_to_buffer(first_arg_for_command, second_arg_for_command, UNSET_NEW_LINE_FLAG);
+			temp_val = expand_pos_expr(first_arg_for_command);
+			insert_to_buffer(temp_val, second_arg_for_command, UNSET_NEW_LINE_FLAG);
 			break;
 		case INSERT_NL:
-			insert_to_buffer(first_arg_for_command, second_arg_for_command, SET_NEW_LINE_FLAG);
+			temp_val = expand_pos_expr(first_arg_for_command);
+			insert_to_buffer(temp_val, second_arg_for_command, SET_NEW_LINE_FLAG);
 			break;
-
+		case INSERT_AFTER_LINE:
+			insert_after_line(first_arg_for_command, second_arg_for_command, UNSET_NEW_LINE_FLAG);
+			break;
+		case INSERT_AFTER_LINE_NL:
+			insert_after_line(first_arg_for_command, second_arg_for_command, SET_NEW_LINE_FLAG);
+			break;
+		// 'd' group of commands
 		case DELETE_LINE:
-			buffer = delete_line(first_arg_for_command);
+			temp_val = strtol(first_arg_for_command, NULL, 10);
+			buffer = delete_line(temp_val);
 			break;
-
+		case DELETE_IN_RANGE:
+			buffer = delete_range(first_arg_for_command, second_arg_for_command);
+			break;
+		// other commands
 		case CLEAN:
 			if(buffer_allocated_memory_flag == BUFFER_HAS_MEMORY)
 				buffer = clean_buffer();
