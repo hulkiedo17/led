@@ -22,5 +22,13 @@ char* insert_to_buffer(int position, char *data, int nl_flag);
 char* delete_line(int line_num);
 char* delete_range(char* start_pos, char* end_pos);
 char* insert_after_line(char* line, char* data, int nl_flag);
+char* delete_substring(char *substring);
+#ifdef DEBUG
+void print_characters(void);
+void print_buffer_size(void);
+void print_number_of_lines(void);
+void print_position_at_line(char *line);
+#endif
 
 #endif
+

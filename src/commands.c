@@ -12,6 +12,48 @@
 uint8_t buffer_allocated_memory_flag = BUFFER_HAS_NO_MEMORY;
 uint8_t is_data_saved_flag = DATA_HAS_BEEN_SAVED;
 
+#ifdef DEBUG
+void print_characters(void) 
+{
+	for(long i = 0; i < buflen(buffer) + 1; i++) {
+		if(buffer[i] == '\0') {
+			printf("\'\\0\'\n");
+			break;
+		} else if(buffer[i] == '\n') {
+			printf("\'\\n\'\n");
+		} else {
+			printf("\'%c\' ", buffer[i]);
+		}
+	}
+}
+
+void print_buffer_size(void)
+{
+	printf("bufsize = %d\n", buflen(buffer) + 1);
+}
+
+void print_number_of_lines(void)
+{
+	printf("number of lines = %d\n", get_number_of_lines_in_buffer());
+}
+
+void print_position_at_line(char *line)
+{
+	int line_num, position;
+
+	if((line_num = expand_line_expr(line)) == -1) {
+		line_num = strtol(line, NULL, 10);
+	}
+
+	if((position = get_position_at_line(line_num)) == -1) {
+		printf("out of lines\n");
+		return;
+	}
+
+	printf("position at %d line = %d\n", line_num, position);
+}
+#endif
+
 char* clean_buffer(void)
 {
 	if(buffer != NULL) {
@@ -31,9 +73,10 @@ void print_buffer(uint8_t line_num_flag)
 	long count_lines = 1;
 	long number_of_lines = get_number_of_lines_in_buffer();
 
-	if(is_buffer_empty())
-		printf("buffer is empty\n");
-	else {
+	if(is_buffer_empty()) {
+		//printf("buffer is empty\n");
+		return;
+	} else {
 		if(line_num_flag == WITH_LINE_NUM_IN_OUTPUT) {
 			/* how works the output with line numbers:
 
@@ -428,6 +471,55 @@ char* delete_range(char* start_pos, char* end_pos)
 		for(int i = 0; i <= (end_line - start_line); i++) {
 			buffer = delete_line(start_line);
 		}
+	}
+
+	return buffer;
+}
+
+char* delete_substring(char *substring)
+{
+	int str_len = buflen(substring) + 1;
+	int buf_len = buflen(buffer) + 1;
+	int temp_buf_len, diff_ps, temp_copy_size;
+	char* ps = NULL;
+	char *temp_buf = NULL;
+
+	if((ps = strstr(buffer, substring)) != NULL) {
+		temp_buf_len = buf_len - str_len;
+		temp_buf = allocate_mem_for_buffer(temp_buf_len);
+		diff_ps = ps - buffer;
+
+		if(diff_ps == 0 && (buf_len == str_len)) {
+			free(buffer);
+			buffer = NULL;
+			free(temp_buf);
+			is_data_saved_flag = DATA_HAS_BEEN_SAVED;
+			buffer_allocated_memory_flag = BUFFER_HAS_NO_MEMORY;
+			return buffer;
+		}
+
+		strncpy(temp_buf, buffer, diff_ps);
+
+		temp_copy_size = buf_len - diff_ps - str_len;
+		if(temp_copy_size == 0) {
+			temp_buf[diff_ps - 1] = '\0';
+		} else {
+			strncpy(temp_buf + diff_ps, buffer + diff_ps + str_len, temp_copy_size);
+		}
+
+		free(buffer);
+		buffer = malloc(temp_buf_len);
+		if(buffer == NULL) {
+			fprintf(stderr, "E: allocation error\n");
+			exit(1);
+		}
+
+		strncpy(buffer, temp_buf, temp_buf_len);
+		free(temp_buf);
+
+		is_data_saved_flag = DATA_NO_HAS_BEEN_SAVED;
+	} else {
+		printf("string does not have the specified string\n");
 	}
 
 	return buffer;

@@ -120,6 +120,24 @@ int main(int argc, char **argv)
 		case DELETE_IN_RANGE:
 			buffer = delete_range(first_arg_for_command, second_arg_for_command);
 			break;
+		case DELETE_SUBSTR:
+			buffer = delete_substring(first_arg_for_command);
+			break;
+		// debug group of commands
+#ifdef DEBUG
+		case PRINT_CHARACTERS:
+			print_characters();
+			break;
+		case PRINT_BUFSIZE:
+			print_buffer_size();
+			break;
+		case PRINT_NLINES:
+			print_number_of_lines();
+			break;
+		case PRINT_LINE_POS:
+			print_position_at_line(first_arg_for_command);
+			break;
+#endif
 		// other commands
 		case CLEAN:
 			if(buffer_allocated_memory_flag == BUFFER_HAS_MEMORY)

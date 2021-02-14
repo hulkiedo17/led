@@ -30,7 +30,7 @@ void help(void)
     printf("usage: editor [filename] [--help|h]\n");
     printf("the \"filename\" option is optional, just like the rest of the parameters\n\n");
     
-    printf("commands:\n");
+    printf("[commands]:\n");
     printf("a - add a text to buffer(to stop, type the '.' in first position in new line)\n");
     printf("an - same as the previous, but without \\n at end\n");
     printf("c - clean the buffer(just free all allocated memory)\n");
@@ -49,14 +49,23 @@ void help(void)
     printf("iln [line] [data] - same as the previous, but but here added \\n at the end of the inserted data\n");
     printf("dl [line_number] - delete the specified line from the buffer\n");
     printf("dr [number1] [number2] - delete the lines in the specified range\n");
+    printf("ds [string] - deletes the specified string in the buffer\n");
     printf("h - basic help reference about commands\n");
     printf("cs - clean screen\n");
+#ifdef DEBUG
+    printf("[debug mode functions]:\n");
+    printf("pbc - print buffer character by character\n");
+    printf("pbs - print buffer size\n");
+    printf("pnl - print number of lines\n");
+    printf("plp - print line position\n");
+#endif
+
     putchar(10);
 }
 
 void basic_command_help(void)
 {
-    printf("commands:\n");
+    printf("[commands]:\n");
     printf("a - append data to the buffer\n");
     printf("an - append data to the buffer (without \\n)\n");
     printf("c - clean the buffer\n");
@@ -73,8 +82,16 @@ void basic_command_help(void)
     printf("iln [line] [data] - same as the previous, but but here added \\n at the end of the inserted data\n");
     printf("dl [line] - delete the specified line from the buffer\n");
     printf("dr [n1] [n2] - delete the lines in the specified range\n");
+    printf("ds [str] - deletes the specified string in the buffer\n");
     printf("h - basic help reference about commands\n");
     printf("cs - clean screen\n");
+#ifdef DEBUG
+    printf("[debug mode functions]:\n");
+    printf("pbc - print buffer character by character\n");
+    printf("pbs - print buffer size\n");
+    printf("pnl - print number of lines\n");
+    printf("plp - print line position\n");
+#endif
 }
 
 void version(void)
@@ -189,3 +206,4 @@ char* choose_filename(char *filename)
     
 	return filename;
 }
+

@@ -67,3 +67,4 @@ FILE* open_file(char *filename, char *mode)
 
     return fp;
 }
+

@@ -39,3 +39,10 @@ iln - same as the previous, but but here added \n at the end of the inserted dat
 
 dl - delete the specified line from the buffer
 dr - delete the lines in the specified range
+
+[debug category]:
+
+pbc - print buffer character by character
+pbs - print buffer size
+pnl - print number of lines
+plp - print line position

@@ -9,7 +9,10 @@ static const char* command_list[] = {
 	"a", "an", "c", "q", "p", "w", 
 	"wa", "pf", "sf", "sp", "wb", "pl", 
 	"i", "in", "dl", "h", "cs", "dr",
-	"il", "iln"
+	"il", "iln", "ds"
+#ifdef DEBUG
+	, "pbc", "pbs", "pnl", "plp"
+#endif
 };
 
 char* first_arg_for_command = NULL;
@@ -163,7 +166,32 @@ command_type_t get_command_token(char *token)
 		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
 		command_second_argument_flag = COMMAND_REQUIRES_AN_ARG;
 		return INSERT_AFTER_LINE_NL;
+	} else if(strcmp(token, command_list[20]) == 0) {
+		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return DELETE_SUBSTR;
 	}
+
+#ifdef DEBUG
+	if(strcmp(token, command_list[21]) == 0) {
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return PRINT_CHARACTERS;
+	} else if(strcmp(token, command_list[22]) == 0) {
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return PRINT_BUFSIZE;
+	} else if(strcmp(token, command_list[23]) == 0) {
+		command_first_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return PRINT_NLINES;
+	} else if(strcmp(token, command_list[24]) == 0) {
+		command_first_argument_flag = COMMAND_REQUIRES_AN_ARG;
+		command_second_argument_flag = COMMAND_DONT_REQUIRES_AN_ARG;
+		return PRINT_LINE_POS;
+	}
+#endif
 
 	return UNKNOWN;
 }
+

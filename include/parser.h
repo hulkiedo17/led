@@ -28,7 +28,14 @@ typedef enum command_type {
     DELETE_LINE,
     BASIC_HELP,
     CLEAN_SCREEN,
-    DELETE_IN_RANGE
+    DELETE_IN_RANGE,
+    DELETE_SUBSTR
+#ifdef DEBUG
+    , PRINT_CHARACTERS,
+    PRINT_BUFSIZE,
+    PRINT_NLINES,
+    PRINT_LINE_POS
+#endif
 } command_type_t;
 
 extern char* first_arg_for_command;

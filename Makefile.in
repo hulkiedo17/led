@@ -1,6 +1,6 @@
 
 ifeq ($(DEBUG), TRUE)
-	CFLAGS := -Wall -Werror -Wextra -pedantic -O0 -g
+	CFLAGS := -Wall -Werror -Wextra -pedantic -O0 -g -DDEBUG
 else
 	CFLAGS := -O3
 endif
