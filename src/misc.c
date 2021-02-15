@@ -9,7 +9,7 @@
 char* filename_global = NULL;
 char* prompt_pointer = NULL;
 const char* default_prompt = ">";
-static char* program_version = "0.5";
+static char* program_version = "0.7";
 static const char* line_addr_expr[] = {
 	".", "$", "/"
 };

@@ -15,6 +15,11 @@ uint8_t is_data_saved_flag = DATA_HAS_BEEN_SAVED;
 #ifdef DEBUG
 void print_characters(void) 
 {
+	if(buffer == NULL) {
+		printf("buffer is empty\n");
+		return;
+	}
+
 	for(long i = 0; i < buflen(buffer) + 1; i++) {
 		if(buffer[i] == '\0') {
 			printf("\'\\0\'\n");
@@ -29,17 +34,32 @@ void print_characters(void)
 
 void print_buffer_size(void)
 {
+	if(buffer == NULL) {
+		printf("buffer is empty\n");
+		return;
+	}
+
 	printf("bufsize = %d\n", buflen(buffer) + 1);
 }
 
 void print_number_of_lines(void)
 {
+	if(buffer == NULL) {
+		printf("buffer is empty\n");
+		return;
+	}
+
 	printf("number of lines = %d\n", get_number_of_lines_in_buffer());
 }
 
 void print_position_at_line(char *line)
 {
 	int line_num, position;
+
+	if(line == NULL) {
+		printf("please type argument\n");
+		return;
+	}
 
 	if((line_num = expand_line_expr(line)) == -1) {
 		line_num = strtol(line, NULL, 10);
