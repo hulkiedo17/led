@@ -1,6 +1,9 @@
 #ifndef MISC_H
 #define MISC_H
 
+#define DEFAULT_EXPAND_TYPE 1
+#define SPECIFIC_EXPAND_TYPE 0
+
 extern char* filename_global;
 extern char* prompt_pointer;
 extern const char* default_prompt;
@@ -17,7 +20,7 @@ int is_valid_filename(char *fn);
 void set_filename(char *string);
 void clean_screen(void);
 int expand_pos_expr(char *expr);
-int expand_line_expr(char *expr);
+int expand_line_expr(char *expr, uint8_t expand_type);
 char* choose_filename(char *filename);
 
 #endif

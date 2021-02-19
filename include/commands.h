@@ -21,8 +21,9 @@ void fill_buffer_from_file(char *filename);
 char* insert_to_buffer(int position, char *data, int nl_flag);
 char* delete_line(int line_num);
 char* delete_range(char* start_pos, char* end_pos);
-char* insert_after_line(char* line, char* data, int nl_flag);
+char* insert_after_line(char* line, char* data, int nl_flag, uint8_t expand_type);
 char* delete_substring(char *substring);
+char* append_after_line(char* line, uint8_t nl_flag);
 #ifdef DEBUG
 void print_characters(void);
 void print_buffer_size(void);

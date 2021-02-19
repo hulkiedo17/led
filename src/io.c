@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "../include/io.h"
 #include "../include/misc.h"
 

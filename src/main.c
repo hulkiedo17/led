@@ -70,6 +70,12 @@ int main(int argc, char **argv)
 		case APPEND:
 			add_data_to_buffer(UNSET_NEW_LINE_FLAG);
 			break;
+		case APPEND_AL:
+			append_after_line(first_arg_for_command, SET_NEW_LINE_FLAG);
+			break;
+		case APPEND_ALN:
+			append_after_line(first_arg_for_command, UNSET_NEW_LINE_FLAG);
+			break;
 		// 'w' group of commands
 		case WRITE:
 			save_buffer_to_file(first_arg_for_command, "w+");
@@ -107,10 +113,10 @@ int main(int argc, char **argv)
 			insert_to_buffer(temp_val, second_arg_for_command, SET_NEW_LINE_FLAG);
 			break;
 		case INSERT_AFTER_LINE:
-			insert_after_line(first_arg_for_command, second_arg_for_command, UNSET_NEW_LINE_FLAG);
+			insert_after_line(first_arg_for_command, second_arg_for_command, UNSET_NEW_LINE_FLAG, DEFAULT_EXPAND_TYPE);
 			break;
 		case INSERT_AFTER_LINE_NL:
-			insert_after_line(first_arg_for_command, second_arg_for_command, SET_NEW_LINE_FLAG);
+			insert_after_line(first_arg_for_command, second_arg_for_command, SET_NEW_LINE_FLAG, DEFAULT_EXPAND_TYPE);
 			break;
 		// 'd' group of commands
 		case DELETE_LINE:

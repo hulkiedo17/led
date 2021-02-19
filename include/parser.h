@@ -29,7 +29,9 @@ typedef enum command_type {
     BASIC_HELP,
     CLEAN_SCREEN,
     DELETE_IN_RANGE,
-    DELETE_SUBSTR
+    DELETE_SUBSTR,
+    APPEND_AL,
+    APPEND_ALN
 #ifdef DEBUG
     , PRINT_CHARACTERS,
     PRINT_BUFSIZE,

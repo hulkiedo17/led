@@ -61,7 +61,7 @@ void print_position_at_line(char *line)
 		return;
 	}
 
-	if((line_num = expand_line_expr(line)) == -1) {
+	if((line_num = expand_line_expr(line, DEFAULT_EXPAND_TYPE)) == -1) {
 		line_num = strtol(line, NULL, 10);
 	}
 
@@ -352,18 +352,26 @@ char* insert_to_buffer(int position, char *data, int nl_flag)
 	return buffer;
 }
 
-char* insert_after_line(char* line, char* data, int nl_flag)
+char* insert_after_line(char* line, char* data, int nl_flag, uint8_t expand_type)
 {
 	int number_of_line, position, all_lines;
 
-	if((number_of_line = expand_line_expr(line)) == -1) {
+	if((number_of_line = expand_line_expr(line, expand_type)) == -1) {
 		number_of_line = strtol(line, NULL, 10);
 	}
 
 	all_lines = get_number_of_lines_in_buffer();
-	if(number_of_line <= 0 && number_of_line > all_lines) {
-		printf("out of lines\n");
-		return buffer;
+
+	if(expand_type == DEFAULT_EXPAND_TYPE) {
+		if(number_of_line <= 0 || number_of_line > all_lines) {
+			printf("out of lines\n");
+			return buffer;
+		}
+	} else {
+		if(number_of_line < 0 || number_of_line > all_lines) {
+			printf("out of lines\n");
+			return buffer;
+		}
 	}
 
 	if(number_of_line == all_lines) {
@@ -542,5 +550,59 @@ char* delete_substring(char *substring)
 		printf("string does not have the specified string\n");
 	}
 
+	return buffer;
+}
+
+char* append_after_line(char* line, uint8_t nl_flag)
+{
+	char* temp_buffer = NULL, *input_buffer = NULL;
+	int temp_buffer_size = 0;
+	int input_buffer_size = 0;
+
+	// append data to temporary buffer from user input
+	input_buffer = read_from_stream(stdin, UNSET_NEW_LINE_FLAG);
+	while(strcmp(input_buffer, ".") != 0) {
+		if(temp_buffer == NULL) {
+			if(nl_flag == SET_NEW_LINE_FLAG) {
+				// +2, because \n at the beginning,
+				// and \0 at the end of buffer
+				input_buffer_size = buflen(input_buffer) + 2;
+				temp_buffer = allocate_mem_for_buffer(input_buffer_size);
+				temp_buffer[0] = '\n';
+				strncpy(temp_buffer + 1, input_buffer, input_buffer_size - 1);
+			} else {
+				// +1, because \0 at the end of buffer
+				input_buffer_size = buflen(input_buffer) + 1;
+				temp_buffer = allocate_mem_for_buffer(input_buffer_size);
+				strncpy(temp_buffer, input_buffer, input_buffer_size);
+			}
+		} else {
+			if(nl_flag == SET_NEW_LINE_FLAG)
+				input_buffer_size = buflen(input_buffer) + 1;
+			else
+				input_buffer_size = buflen(input_buffer);
+
+			temp_buffer_size = buflen(temp_buffer) + 1;
+			temp_buffer = reallocate_mem_for_buffer(temp_buffer, temp_buffer_size, input_buffer_size);
+
+			if(nl_flag == SET_NEW_LINE_FLAG)
+				strncpy(temp_buffer + temp_buffer_size, input_buffer, input_buffer_size);
+			else
+				strncpy(temp_buffer + temp_buffer_size - 1, input_buffer, input_buffer_size);
+			
+			if(nl_flag == SET_NEW_LINE_FLAG)
+				temp_buffer[temp_buffer_size - 1] = '\n';
+		}
+
+		free(input_buffer);
+		input_buffer = read_from_stream(stdin, UNSET_NEW_LINE_FLAG);
+	}
+	free(input_buffer);
+
+	// insert data from temporary buffer to main buffer 
+	// at the specified position
+	insert_after_line(line, temp_buffer, nl_flag, SPECIFIC_EXPAND_TYPE);
+
+	free(temp_buffer);
 	return buffer;
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include "../include/misc.h"
 #include "../include/buffer.h"
@@ -9,7 +10,7 @@
 char* filename_global = NULL;
 char* prompt_pointer = NULL;
 const char* default_prompt = ">";
-static char* program_version = "0.7";
+static char* program_version = "0.8";
 static const char* line_addr_expr[] = {
 	".", "$", "/"
 };
@@ -33,6 +34,8 @@ void help(void)
     printf("[commands]:\n");
     printf("a - add a text to buffer(to stop, type the '.' in first position in new line)\n");
     printf("an - same as the previous, but without \\n at end\n");
+    printf("al - append data entered by the user tp the buffer after the specified line\n");
+    printf("aln - same as the previous, but without \\n\n");
     printf("c - clean the buffer(just free all allocated memory)\n");
     printf("q - quit from editor(you quit from editor if you saved all data to file or cleaned the buffer)\n");
     printf("p - print buffer to output\n");
@@ -68,6 +71,8 @@ void basic_command_help(void)
     printf("[commands]:\n");
     printf("a - append data to the buffer\n");
     printf("an - append data to the buffer (without \\n)\n");
+    printf("al - append data entered by the user tp the buffer after the specified line\n");
+    printf("aln - same as the previous, but without \\n\n");
     printf("c - clean the buffer\n");
     printf("q - quit from the editor\n");
     printf("p - print buffer\n");
@@ -182,10 +187,14 @@ int expand_pos_expr(char *expr)
 	return -1;
 }
 
-int expand_line_expr(char *expr)
+int expand_line_expr(char *expr, uint8_t expand_type)
 {
-	if(strcmp(expr, line_addr_expr[0]) == 0)
-		return 1;
+	if(strcmp(expr, line_addr_expr[0]) == 0) {
+        if(expand_type == DEFAULT_EXPAND_TYPE)
+            return 1;
+        else
+            return 0;
+    }
 	else if(strcmp(expr, line_addr_expr[1]) == 0)
 		return get_number_of_lines_in_buffer();
 	else if(strcmp(expr, line_addr_expr[2]) == 0)

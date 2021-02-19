@@ -1,3 +1,6 @@
+[command line arguments behaviour]:
+Commands such as insert and the like have 2 arguments: one for position (or line number) and one for data (data string). So, the second argument (or the string) must not have any spaces, otherwise the string will be split into several tokens and the very first one will be used, therefore, to insert any large text, you should use append commands, such as: a, al, an, aln.
+
 [main category]:
 
 a - add data to buffer (with '\n')

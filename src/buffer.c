@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include "../include/main.h"
 #include "../include/misc.h"
@@ -33,8 +34,8 @@ int get_buffer_size(void)
 {
 	if(!is_buffer_empty())
 		return buflen(buffer) + 1;
-	else
-		return -1;
+	
+	return -1;
 }
 
 char* allocate_mem_for_buffer(int size)
@@ -101,7 +102,7 @@ int get_number_of_line_expr(char *pos)
 		fprintf(stderr, "buffer is empty\n");
 	}
 
-	if((position = expand_line_expr(pos)) == -1) {
+	if((position = expand_line_expr(pos, DEFAULT_EXPAND_TYPE)) == -1) {
 		position = strtol(pos, NULL, 10);
 	}
 
@@ -113,3 +114,26 @@ int get_number_of_line_expr(char *pos)
 	return position;
 }
 
+int get_position_for_next_line(int line_num)
+{
+	int number_of_lines = get_number_of_lines_in_buffer();
+	int pos_at_line = 0;
+
+	if(line_num < 0) {
+		printf("out of lines\n");
+		return -1;
+	}
+
+	if(line_num >= number_of_lines) {
+		pos_at_line = get_buffer_size() - 1;
+	} else {
+		pos_at_line = get_position_at_line(line_num + 1);
+	}
+
+	if(pos_at_line < 0 || pos_at_line > (get_buffer_size() - 1)) {
+		printf("out of position\n");
+		return -1;
+	}
+
+	return pos_at_line;
+}
