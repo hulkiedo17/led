@@ -1,5 +1,5 @@
 # led
-led is a line-oriented text editor in command line. This editor is similar to the standard program on unix systems - GNU ed. But i'm going to make an exact clone of that progam, it's just a pet project.
+led is a line-oriented text editor in command line. This editor is similar to the standard program on unix systems - GNU ed. But i'm not going to make an exact clone of that program, it's just a pet project.
 
 ## Example of usage
 
