@@ -35,6 +35,7 @@ void help(void)
 	puts("[cli options]:");
 	printf("\t-h (--help)    - prints this help message\n");
 	printf("\t-v (--version) - shows the program version\n");
+	printf("\t-f [file] (--filename) - set the filename by default\n");
 	putchar('\n');
 
 	puts("[program commands]:");

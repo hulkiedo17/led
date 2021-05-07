@@ -45,7 +45,7 @@ install: $(BUILD_DIR)$(EXEC)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp $< $(DESTDIR)$(PREFIX)/bin/$(EXEC)
 
-unistall:
+uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/$(EXEC)
 
 clean:
