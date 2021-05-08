@@ -34,10 +34,15 @@ typedef enum command_token {
 	DELETE_LINES_IN_RANGE
 } command_token_t;
 
+typedef struct tokens {
+	argument_type_t command_arg_type;
+	command_token_t token_type;
+} tokens_t;
+
 extern char* one_big_argument_pointer;
 extern char* first_small_argument_pointer;
 extern char* second_small_argument_pointer;
 
-command_token_t parse_command(const char* const input_buffer);
+tokens_t parse_command(const char* const input_buffer);
 
 #endif

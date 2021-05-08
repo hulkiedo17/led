@@ -14,92 +14,95 @@ static const char* const command_list[] = {
 	"dl", "dr"
 };
 
-static argument_type_t command_arg_type = UNKNOWN_TYPE;
 char* one_big_argument_pointer = NULL;
 char* first_small_argument_pointer = NULL;
 char* second_small_argument_pointer = NULL;
 
-static command_token_t get_command_token(const char* const token)
+static tokens_t get_command_token(const char* const string_token)
 {
-	if(token == NULL) {
+	tokens_t token = { UNKNOWN_TYPE, UNKNOWN_TYPE };
+	if(string_token == NULL) {
 		//warning(stderr, "error: null token pointer\n");
-		return UNKNOWN_TOKEN;
+		return token;
 	}
 
-	if(strcmp(token, command_list[0]) == 0) {				// q
-		command_arg_type = DONT_USES_ARG;
-		return QUIT;
-	} else if(strcmp(token, command_list[1]) == 0) {		// sp
-		command_arg_type = USES_A_FEW_SMALL_ARGS;
-		return SET_CUSTOM_PROMPT;
-	} else if(strcmp(token, command_list[2]) == 0) {		// sd
-		command_arg_type = DONT_USES_ARG;
-		return SET_DEFAULT_PROMPT;
-	} else if(strcmp(token, command_list[3]) == 0) {		// cs
-		command_arg_type = DONT_USES_ARG;
-		return CLEAN_SCREEN;
-	} else if(strcmp(token, command_list[4]) == 0) {		// c
-		command_arg_type = DONT_USES_ARG;
-		return CLEAN_BUFFER;
-	} else if(strcmp(token, command_list[5]) == 0) {		// p
-		command_arg_type = DONT_USES_ARG;
-		return PRINT_DEFAULT;
-	} else if(strcmp(token, command_list[6]) == 0) {		// pl
-		command_arg_type = USES_A_FEW_SMALL_ARGS;
-		return PRINT_NUMBERED_LINES;
-	} else if(strcmp(token, command_list[7]) == 0) {		// a
-		command_arg_type = DONT_USES_ARG;
-		return APPEND;
-	} else if(strcmp(token, command_list[8]) == 0) {		// ap
-		command_arg_type = DONT_USES_ARG;
-		return APPEND_WITH_NEW_LINE;
-	} else if(strcmp(token, command_list[9]) == 0) {		// pc
-		command_arg_type = DONT_USES_ARG;
-		return PRINT_BY_CHAR;
-	} else if(strcmp(token, command_list[10]) == 0) {		// sf
-		command_arg_type = USES_A_FEW_SMALL_ARGS;
-		return SET_FILENAME;
-	} else if(strcmp(token, command_list[11]) == 0) {		// pf
-		command_arg_type = DONT_USES_ARG;
-		return PRINT_FILENAME;
-	} else if(strcmp(token, command_list[12]) == 0) {		// w
-		command_arg_type = USES_A_FEW_SMALL_ARGS;
-		return WRITE_BUF;
-	} else if(strcmp(token, command_list[13]) == 0) {		// wa
-		command_arg_type = USES_A_FEW_SMALL_ARGS;
-		return WRITE_BUF_APPEND;
-	} else if(strcmp(token, command_list[14]) == 0) {		// f
-		command_arg_type = USES_A_FEW_SMALL_ARGS;
-		return FILL_BUF;
-	} else if(strcmp(token, command_list[15]) == 0) {		// fn
-		command_arg_type = USES_A_FEW_SMALL_ARGS;
-		return FILL_BUF_NL;
-	} else if(strcmp(token, command_list[16]) == 0) {		// ia
-		command_arg_type = USES_ONE_BIG_ARG;
-		return INSERT_AFTER;
-	} else if(strcmp(token, command_list[17]) == 0) {		// ian
-		command_arg_type = USES_ONE_BIG_ARG;
-		return INSERT_AFTER_NL;
-	} else if(strcmp(token, command_list[18]) == 0) {		// ib
-		command_arg_type = USES_ONE_BIG_ARG;
-		return INSERT_BEFORE;
-	} else if(strcmp(token, command_list[19]) == 0) {		// ibn
-		command_arg_type = USES_ONE_BIG_ARG;
-		return INSERT_BEFORE_NL;
-	} else if(strcmp(token, command_list[20]) == 0) {		// dl
-		command_arg_type = USES_A_FEW_SMALL_ARGS;
-		return DELETE_LINE;
-	} else if(strcmp(token, command_list[21]) == 0) {		// dr
-		command_arg_type = USES_A_FEW_SMALL_ARGS;
-		return DELETE_LINES_IN_RANGE;
+	if(strcmp(string_token, command_list[0]) == 0) {			// q
+		token.command_arg_type = DONT_USES_ARG;
+		token.token_type = QUIT;
+	} else if(strcmp(string_token, command_list[1]) == 0) {		// sp
+		token.command_arg_type = USES_A_FEW_SMALL_ARGS;
+		token.token_type = SET_CUSTOM_PROMPT;
+	} else if(strcmp(string_token, command_list[2]) == 0) {		// sd
+		token.command_arg_type = DONT_USES_ARG;
+		token.token_type = SET_DEFAULT_PROMPT;
+	} else if(strcmp(string_token, command_list[3]) == 0) {		// cs
+		token.command_arg_type = DONT_USES_ARG;
+		token.token_type = CLEAN_SCREEN;
+	} else if(strcmp(string_token, command_list[4]) == 0) {		// c
+		token.command_arg_type = DONT_USES_ARG;
+		token.token_type = CLEAN_BUFFER;
+	} else if(strcmp(string_token, command_list[5]) == 0) {		// p
+		token.command_arg_type = DONT_USES_ARG;
+		token.token_type = PRINT_DEFAULT;
+	} else if(strcmp(string_token, command_list[6]) == 0) {		// pl
+		token.command_arg_type = USES_A_FEW_SMALL_ARGS;
+		token.token_type = PRINT_NUMBERED_LINES;
+	} else if(strcmp(string_token, command_list[7]) == 0) {		// a
+		token.command_arg_type = DONT_USES_ARG;
+		token.token_type = APPEND;
+	} else if(strcmp(string_token, command_list[8]) == 0) {		// ap
+		token.command_arg_type = DONT_USES_ARG;
+		token.token_type = APPEND_WITH_NEW_LINE;
+	} else if(strcmp(string_token, command_list[9]) == 0) {		// pc
+		token.command_arg_type = DONT_USES_ARG;
+		token.token_type = PRINT_BY_CHAR;
+	} else if(strcmp(string_token, command_list[10]) == 0) {	// sf
+		token.command_arg_type = USES_A_FEW_SMALL_ARGS;
+		token.token_type = SET_FILENAME;
+	} else if(strcmp(string_token, command_list[11]) == 0) {	// pf
+		token.command_arg_type = DONT_USES_ARG;
+		token.token_type = PRINT_FILENAME;
+	} else if(strcmp(string_token, command_list[12]) == 0) {	// w
+		token.command_arg_type = USES_A_FEW_SMALL_ARGS;
+		token.token_type = WRITE_BUF;
+	} else if(strcmp(string_token, command_list[13]) == 0) {	// wa
+		token.command_arg_type = USES_A_FEW_SMALL_ARGS;
+		token.token_type = WRITE_BUF_APPEND;
+	} else if(strcmp(string_token, command_list[14]) == 0) {	// f
+		token.command_arg_type = USES_A_FEW_SMALL_ARGS;
+		token.token_type = FILL_BUF;
+	} else if(strcmp(string_token, command_list[15]) == 0) {	// fn
+		token.command_arg_type = USES_A_FEW_SMALL_ARGS;
+		token.token_type = FILL_BUF_NL;
+	} else if(strcmp(string_token, command_list[16]) == 0) {	// ia
+		token.command_arg_type = USES_ONE_BIG_ARG;
+		token.token_type = INSERT_AFTER;
+	} else if(strcmp(string_token, command_list[17]) == 0) {	// ian
+		token.command_arg_type = USES_ONE_BIG_ARG;
+		token.token_type = INSERT_AFTER_NL;
+	} else if(strcmp(string_token, command_list[18]) == 0) {	// ib
+		token.command_arg_type = USES_ONE_BIG_ARG;
+		token.token_type = INSERT_BEFORE;
+	} else if(strcmp(string_token, command_list[19]) == 0) {	// ibn
+		token.command_arg_type = USES_ONE_BIG_ARG;
+		token.token_type = INSERT_BEFORE_NL;
+	} else if(strcmp(string_token, command_list[20]) == 0) {	// dl
+		token.command_arg_type = USES_A_FEW_SMALL_ARGS;
+		token.token_type = DELETE_LINE;
+	} else if(strcmp(string_token, command_list[21]) == 0) {	// dr
+		token.command_arg_type = USES_A_FEW_SMALL_ARGS;
+		token.token_type = DELETE_LINES_IN_RANGE;
+	} else {
+		token.command_arg_type = UNKNOWN_TYPE;
+		token.token_type = UNKNOWN_TOKEN;
 	}
 
-	return UNKNOWN_TOKEN;
+	return token;
 }
 
-command_token_t parse_command(const char* const input_buffer)
+tokens_t parse_command(const char* const input_buffer)
 {
-	command_token_t token = UNKNOWN_TOKEN;
+	tokens_t command_token = { UNKNOWN_TYPE, UNKNOWN_TOKEN };
 	char* command_without_args = NULL;
 	char* local_input_buffer;
 	char* first_arg_ptr = NULL, *second_arg_ptr = NULL;
@@ -111,9 +114,9 @@ command_token_t parse_command(const char* const input_buffer)
 	strncpy(local_input_buffer, input_buffer, strlen(input_buffer) + 1);
 
 	command_without_args = strtok(local_input_buffer, " ");
-	token = get_command_token(command_without_args);
+	command_token = get_command_token(command_without_args);
 
-	if(command_arg_type == USES_A_FEW_SMALL_ARGS) {
+	if(command_token.command_arg_type == USES_A_FEW_SMALL_ARGS) {
 		first_arg_ptr = strtok(NULL, " ");
 		second_arg_ptr = strtok(NULL, " ");
 
@@ -139,7 +142,7 @@ command_token_t parse_command(const char* const input_buffer)
 				strncpy(second_small_argument_pointer, second_arg_ptr, second_arg_size);
 			}
 		}
-	} else if(command_arg_type == USES_ONE_BIG_ARG) {
+	} else if(command_token.command_arg_type == USES_ONE_BIG_ARG) {
 		big_arg_ptr = input_buffer + strlen(command_without_args) + 1;
 		big_arg_size = strlen(big_arg_ptr) + 1;
 
@@ -151,12 +154,12 @@ command_token_t parse_command(const char* const input_buffer)
 		one_big_argument_pointer = alloc_buffer(big_arg_size);
 		strncpy(one_big_argument_pointer, big_arg_ptr, big_arg_size);
 	} else {
-		if(command_arg_type != DONT_USES_ARG) {
+		if(command_token.command_arg_type != DONT_USES_ARG) {
 			//warning(stderr, "error: unknown type of argument for command\n");
-			return token;
+			return command_token;
 		}
 	}
 
 	free(local_input_buffer);
-	return token;
+	return command_token;
 }

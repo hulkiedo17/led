@@ -26,7 +26,7 @@ void save_buffer(char* filename, char* mode)
 	char* current_filename = NULL;
 	size_t buffer_length;
 
-	if((buffer_length = get_buffer_size()) == 0) {
+	if((buffer_length = get_buffer_size(global_buffer)) == 0) {
 		printf("buffer is empty\n");
 		return;
 	}
@@ -42,7 +42,7 @@ void save_buffer(char* filename, char* mode)
 		warning(stderr, "warning: cannot save buffer - file can't open or doesn't exists\n");
 	}
 
-	if(fwrite(buffer, buffer_length - 1, 1, fp) != 1) {
+	if(fwrite(global_buffer, buffer_length - 1, 1, fp) != 1) {
 		fail(stderr, "error: fwrite() failed\n");
 	}
 
@@ -72,19 +72,19 @@ void fill_buffer(char* filename, uint8_t new_line_flag)
 	temp_buffer = read_from_stream(fp, SKIP_NEW_LINE);
 	fclose(fp);
 
-	if((buffer_length = get_buffer_size()) == -1) {
+	if((buffer_length = get_buffer_size(global_buffer)) == -1) {
 		buffer_length = 0;
 	}
 
 	temp_buffer_length = buflen(temp_buffer) + 1;
-	buffer = realloc_buffer(buffer, buffer_length, temp_buffer_length);
+	global_buffer = realloc_buffer(global_buffer, buffer_length, temp_buffer_length);
 
-	strncpy(buffer + buffer_length, temp_buffer, temp_buffer_length);
+	strncpy(global_buffer + buffer_length, temp_buffer, temp_buffer_length);
 	if(buffer_length != 0) {
 		if(new_line_flag == DONT_SKIP_NEW_LINE) {
-			buffer[buffer_length - 1] = '\n';
+			global_buffer[buffer_length - 1] = '\n';
 		} else {
-			buffer[buffer_length - 1] = ' ';
+			global_buffer[buffer_length - 1] = ' ';
 		}
 	}
 

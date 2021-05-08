@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "../include/main.h"
 
-static const char* const  program_version = "0.1";
+static const char* const  program_version = "0.2";
 
 void fail(FILE* out, const char* fmt, ...)
 {
@@ -47,7 +47,7 @@ void help(void)
 	printf("\tp  - print buffer\n");
 	printf("\tpl - print buffer with numbered lines\n");
 	printf("\ta  - append data to buffer(wihtout \\n)\n");
-	printf("\tap - append data to buffer(with \\n)\n");
+	printf("\tan - append data to buffer(with \\n)\n");
 	printf("\tpc - print buffer by characters\n");
 	printf("\tsf [file] - set filename\n");
 	printf("\tpf - print filename\n");

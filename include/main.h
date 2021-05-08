@@ -5,7 +5,7 @@
 #define DONT_QUIT_FLAG 0
 
 extern bool is_data_saved;
-extern char* buffer;
+extern char* global_buffer;
 extern char* global_filename;
 
 #endif

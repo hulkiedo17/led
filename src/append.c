@@ -15,23 +15,23 @@ void append_data(uint8_t new_line_flag)
 
 	input_buffer = read_from_stream(stdin, DONT_SKIP_NEW_LINE);
 	while(strcmp(input_buffer, ".") != 0) {
-		if(is_buffer_empty() == true) {
+		if(is_buffer_empty(global_buffer) == true) {
 			input_buffer_size = buflen(input_buffer) + 1;
-			buffer = alloc_buffer(input_buffer_size);
+			global_buffer = alloc_buffer(input_buffer_size);
 
-			strncpy(buffer, input_buffer, input_buffer_size);
+			strncpy(global_buffer, input_buffer, input_buffer_size);
 		} else {
 			input_buffer_size = buflen(input_buffer) + 1;
-			buffer_size = get_buffer_size();
+			buffer_size = get_buffer_size(global_buffer);
 
-			buffer = realloc_buffer(buffer, buffer_size, input_buffer_size);
+			global_buffer = realloc_buffer(global_buffer, buffer_size, input_buffer_size);
 
-			strncpy(buffer + buffer_size, input_buffer, input_buffer_size);
+			strncpy(global_buffer + buffer_size, input_buffer, input_buffer_size);
 
 			if(new_line_flag == DONT_SKIP_NEW_LINE) {
-				buffer[buffer_size - 1] = '\n';
+				global_buffer[buffer_size - 1] = '\n';
 			} else {
-				buffer[buffer_size - 1] = ' ';
+				global_buffer[buffer_size - 1] = ' ';
 			}
 		}
 		free(input_buffer);

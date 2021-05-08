@@ -12,7 +12,7 @@ static char* delete(size_t position1, size_t position2)
 	char* temp_buffer = NULL;
 	size_t start_position, end_position, bufsize, temp_bufsize;
 
-	if((bufsize = get_buffer_size()) == 0) {
+	if((bufsize = get_buffer_size(global_buffer)) == 0) {
 		return NULL;
 	}
 
@@ -34,32 +34,32 @@ static char* delete(size_t position1, size_t position2)
 	if(temp_bufsize > 0) {
 		temp_buffer = alloc_buffer(temp_bufsize);
 	} else {
-		free(buffer);
+		free(global_buffer);
 		free(temp_buffer);
-		buffer = NULL;
+		global_buffer = NULL;
 		is_data_saved = true;
 		return NULL;
 	}
 
-	strncpy(temp_buffer, buffer, start_position);
+	strncpy(temp_buffer, global_buffer, start_position);
 	if(end_position == bufsize - 1) {
 		temp_buffer[start_position - 1] = '\0';
 	} else {
-		strncpy(temp_buffer + start_position, buffer + end_position, bufsize - end_position);
+		strncpy(temp_buffer + start_position, global_buffer + end_position, bufsize - end_position);
 	}
 
-	free(buffer);
-	buffer = alloc_buffer(temp_bufsize);
-	strncpy(buffer, temp_buffer, temp_bufsize);
+	free(global_buffer);
+	global_buffer = alloc_buffer(temp_bufsize);
+	strncpy(global_buffer, temp_buffer, temp_bufsize);
 
 	free(temp_buffer);
 	is_data_saved = false;
-	return buffer;
+	return global_buffer;
 }
 
 void delete_line(size_t line_number)
 {
-	size_t number_of_lines = get_number_of_lines();
+	size_t number_of_lines = get_number_of_lines(global_buffer);
 	int position1, position2;
 
 	if(line_number < (size_t)1 || line_number > number_of_lines) {
@@ -69,21 +69,21 @@ void delete_line(size_t line_number)
 
 	// handling the last line in the buffer
 	if(line_number == (size_t)1 && number_of_lines == (size_t)1) {
-		free(buffer);
-		buffer = NULL;
+		free(global_buffer);
+		global_buffer = NULL;
 		is_data_saved = true;
 		return;
 	}
 
-	if((position1 = get_position_at_line(line_number)) == -1) {
+	if((position1 = get_position_at_line(global_buffer, line_number)) == -1) {
 		warning(stderr, "warning: get_number_of_lines() failed\n");
 		return;
 	}
 
 	if(line_number == number_of_lines) {
-		position2 = get_buffer_size() - 1;
+		position2 = get_buffer_size(global_buffer) - 1;
 	} else {
-		if((position2 = get_position_at_line(line_number + 1)) == -1) {
+		if((position2 = get_position_at_line(global_buffer, line_number + 1)) == -1) {
 			warning(stderr, "warning: get_number_of_lines() failed\n");
 			return;
 		}
@@ -101,12 +101,12 @@ void delete_range_of_lines(const char* const line1_start, const char* const line
 		return;
 	}
 
-	if(is_buffer_empty()) {
+	if(is_buffer_empty(global_buffer)) {
 		printf("buffer is empty\n");
 		return;
 	}
 
-	size_t number_of_lines = get_number_of_lines();
+	size_t number_of_lines = get_number_of_lines(global_buffer);
 	size_t start_line, end_line;
 
 	start_line = (size_t)strtol(line1_start, NULL, 10);
@@ -121,6 +121,10 @@ void delete_range_of_lines(const char* const line1_start, const char* const line
 		printf("out of lines\n");
 		return;
 	}
+
+	// TODO: how can i/you optimize this?
+	// answer: dont use 10 delete_line() calls to delete 10 lines,
+	// use 1 call delete() from (start line position) to (end line position + 1)
 
 	if(start_line == end_line) {
 		delete_line(start_line);

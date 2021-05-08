@@ -6,7 +6,7 @@
 #include "../include/main.h"
 #include "../include/buffer.h"
 
-bool is_buffer_empty(void)
+bool is_buffer_empty(const char * const buffer)
 {
 	if(buffer == NULL) {
 		return true;
@@ -18,6 +18,9 @@ bool is_buffer_empty(void)
 size_t buflen(const char* const buffer)
 {
 	size_t i = 0;
+	if(buffer == NULL) {
+		return i;
+	}
 
 	while(buffer[i] != '\0') {
 		i++;
@@ -44,17 +47,17 @@ char* realloc_buffer(char* buffer, size_t old_size, size_t new_data_size)
 	return buffer;
 }
 
-size_t get_buffer_size(void)
+size_t get_buffer_size(const char* const buffer)
 {
-	if(is_buffer_empty() == false) {
+	if(is_buffer_empty(buffer) == false) {
 		return buflen(buffer) + 1;
 	}
 	return 0;
 }
 
-size_t get_number_of_lines(void)
+size_t get_number_of_lines(const char* const buffer)
 {
-	size_t new_line_counter, count, bufsize = get_buffer_size();
+	size_t new_line_counter, count, bufsize = get_buffer_size(buffer);
 
 	if(bufsize == 0) {
 		//warning(stderr, "buffer is empty\n");
@@ -71,9 +74,9 @@ size_t get_number_of_lines(void)
 	return new_line_counter;
 }
 
-int get_position_at_line(size_t line_number)
+int get_position_at_line(const char* const buffer, size_t line_number)
 {
-	size_t new_line_counter = 1, count, bufsize = get_buffer_size();
+	size_t new_line_counter = 1, count, bufsize = get_buffer_size(buffer);
 
 	if(bufsize == 0) {
 		//warning(stderr, "buffer is empty\n");
@@ -94,10 +97,10 @@ int get_position_at_line(size_t line_number)
 
 void clean_buffer(void)
 {
-	if(buffer != NULL) {
-		printf("freed memory: %zd bytes\n", get_buffer_size());
-		free(buffer);
-		buffer = NULL;
+	if(global_buffer != NULL) {
+		printf("freed memory: %zd bytes\n", get_buffer_size(global_buffer));
+		free(global_buffer);
+		global_buffer = NULL;
 	} else {
 		printf("buffer is empty\n");
 	}
@@ -105,13 +108,13 @@ void clean_buffer(void)
 	is_data_saved = true;
 }
 
-void print_buffer(char* line, uint8_t numbered_lines_flag)
+void print_buffer(const char* const buffer, char* line, uint8_t numbered_lines_flag)
 {
-	size_t count_lines = 1, number_of_lines = get_number_of_lines();
+	size_t count_lines = 1, number_of_lines = get_number_of_lines(buffer);
 	int line_position, line_position2;
 	long line_number;
 
-	if(is_buffer_empty() == true) {
+	if(is_buffer_empty(buffer) == true) {
 		printf("buffer is empty\n");
 		return;
 	} else {
@@ -123,16 +126,16 @@ void print_buffer(char* line, uint8_t numbered_lines_flag)
 				return;
 			}
 
-			line_position = get_position_at_line(line_number);
+			line_position = get_position_at_line(buffer, line_number);
 			if(line_position == -1) {
 				warning(stderr, "warning: get_position_at_line() failed\n");
 				return;
 			}
 
 			if(line_number == (long)number_of_lines) {
-				line_position2 = get_buffer_size();
+				line_position2 = get_buffer_size(buffer);
 			} else {
-				line_position2 = get_position_at_line(line_number + 1);
+				line_position2 = get_position_at_line(buffer, line_number + 1);
 				if(line_position2 == -1) {
 					warning(stderr, "warning: get_position_at_line() failed\n");
 					return;
@@ -181,9 +184,9 @@ void print_buffer(char* line, uint8_t numbered_lines_flag)
 	}
 }
 
-void print_buffer_by_char(void)
+void print_buffer_by_char(const char* const buffer)
 {
-	if(is_buffer_empty() == true) {
+	if(is_buffer_empty(buffer) == true) {
 		printf("buffer is empty\n");
 		return;
 	}

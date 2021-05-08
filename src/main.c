@@ -14,17 +14,17 @@
 #include "../include/insert.h"
 #include "../include/delete.h"
 
-char* buffer = NULL;
+char* global_buffer = NULL;
 char* global_filename = NULL;
 bool is_data_saved = true;
 
-static int execute_command(command_token_t token);
+static int execute_command(tokens_t token);
 static void free_all_pointers_and_buffer(void);
 
 int main(int argc, char **argv)
 {
 	int result, help_flag = 0, version_flag = 0;
-	command_token_t token = UNKNOWN_TOKEN;
+	tokens_t token = { UNKNOWN_TYPE, UNKNOWN_TOKEN };
 	char* input_buffer = NULL;
 	const char* short_opt = "hvf:";
 	const struct option long_opt[] = {
@@ -73,10 +73,10 @@ int main(int argc, char **argv)
 	return 0;
 }
 
-static int execute_command(command_token_t token)
+static int execute_command(tokens_t token)
 {
 	size_t temp_val;
-	switch(token) {
+	switch(token.token_type) {
 	case QUIT:
 		if(is_data_saved == false) {
 			printf("before you quit, please write data in buffer to file or clear buffer\n");
@@ -97,10 +97,10 @@ static int execute_command(command_token_t token)
 		clean_buffer();
 		break;
 	case PRINT_DEFAULT:
-		print_buffer(first_small_argument_pointer, DONT_OUTPUT_NUMBERED_LINES);
+		print_buffer(global_buffer, first_small_argument_pointer, DONT_OUTPUT_NUMBERED_LINES);
 		break;
 	case PRINT_NUMBERED_LINES:
-		print_buffer(first_small_argument_pointer, OUTPUT_NUMBERED_LINES);
+		print_buffer(global_buffer, first_small_argument_pointer, OUTPUT_NUMBERED_LINES);
 		break;
 	case APPEND:
 		append_data(SKIP_NEW_LINE);
@@ -109,7 +109,7 @@ static int execute_command(command_token_t token)
 		append_data(DONT_SKIP_NEW_LINE);
 		break;
 	case PRINT_BY_CHAR:
-		print_buffer_by_char();
+		print_buffer_by_char(global_buffer);
 		break;
 	case SET_FILENAME:
 		set_filename(first_small_argument_pointer);
@@ -175,8 +175,8 @@ static void free_all_pointers_and_buffer(void)
 		free(global_filename);
 		global_filename = NULL;
 	}
-	if(buffer != NULL) {
-		free(buffer);
-		buffer = NULL;
+	if(global_buffer != NULL) {
+		free(global_buffer);
+		global_buffer = NULL;
 	}
 }
