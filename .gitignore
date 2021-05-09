@@ -1,4 +1,5 @@
-*.d
+bin/debug/*.d
+bin/release/*.d
 *.o
 led
 Makefile
