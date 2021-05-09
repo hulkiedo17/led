@@ -40,7 +40,7 @@ $(BUILD_DIR)%.o: %.c $(HEADERS)
 
 include $(wildcard $(BUILD_DIR)*.d)
 
-.PHONY: install unistall clean cleandep
+.PHONY: install uninstall clean cleandep
 install: $(BUILD_DIR)$(EXEC)
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	cp $< $(DESTDIR)$(PREFIX)/bin/$(EXEC)
