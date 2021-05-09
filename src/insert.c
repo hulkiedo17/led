@@ -149,7 +149,7 @@ void insert_before(const char* const data, int new_line_flag)
 {
 	long line_number = -1;
 	char* data_pointer;
-	size_t number_of_lines, position;
+	size_t number_of_lines, position = 0;
 
 	number_of_lines = get_number_of_lines(global_buffer);
 	data_pointer = get_tokens_from_argument(data, &line_number);
