@@ -156,6 +156,7 @@ tokens_t parse_command(const char* const input_buffer)
 	} else {
 		if(command_token.command_arg_type != DONT_USES_ARG) {
 			//warning(stderr, "error: unknown type of argument for command\n");
+			free(local_input_buffer);
 			return command_token;
 		}
 	}
