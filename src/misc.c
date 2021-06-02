@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "../include/main.h"
 
-static const char* const  program_version = "0.2";
+static const char* const  program_version = "0.3";
 
 void fail(FILE* out, const char* fmt, ...)
 {

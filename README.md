@@ -4,7 +4,7 @@ led is a line-oriented text editor in command line. This editor is similar to th
 ## Example of usage
 
 <p align="center">
-	<image src="/doc/led.gif">
+	<image src="/docs/led.gif">
 </p>
 
 ## Features
