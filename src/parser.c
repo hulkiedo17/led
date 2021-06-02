@@ -20,7 +20,7 @@ char* second_small_argument_pointer = NULL;
 
 static tokens_t get_command_token(const char* const string_token)
 {
-	tokens_t token = { UNKNOWN_TYPE, UNKNOWN_TYPE };
+	tokens_t token = { UNKNOWN_TYPE, UNKNOWN_TOKEN };
 	if(string_token == NULL) {
 		//warning(stderr, "error: null token pointer\n");
 		return token;
@@ -120,15 +120,6 @@ tokens_t parse_command(const char* const input_buffer)
 		first_arg_ptr = strtok(NULL, " ");
 		second_arg_ptr = strtok(NULL, " ");
 
-		if(first_small_argument_pointer != NULL) {
-			free(first_small_argument_pointer);
-			first_small_argument_pointer = NULL;
-		}
-		if(second_small_argument_pointer != NULL) {
-			free(second_small_argument_pointer);
-			second_small_argument_pointer = NULL;
-		}
-
 		if(first_arg_ptr != NULL) {
 			first_arg_size = strlen(first_arg_ptr) + 1;
 			first_small_argument_pointer = alloc_buffer(first_arg_size);
@@ -145,11 +136,6 @@ tokens_t parse_command(const char* const input_buffer)
 	} else if(command_token.command_arg_type == USES_ONE_BIG_ARG) {
 		big_arg_ptr = input_buffer + strlen(command_without_args) + 1;
 		big_arg_size = strlen(big_arg_ptr) + 1;
-
-		if(one_big_argument_pointer != NULL) {
-			free(one_big_argument_pointer);
-			one_big_argument_pointer = NULL;
-		}
 
 		one_big_argument_pointer = alloc_buffer(big_arg_size);
 		strncpy(one_big_argument_pointer, big_arg_ptr, big_arg_size);

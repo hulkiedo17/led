@@ -19,7 +19,8 @@ char* global_filename = NULL;
 bool is_data_saved = true;
 
 static int execute_command(tokens_t token);
-static void free_all_pointers_and_buffer(void);
+static void free_argument_pointers(void);
+static void free_buffer_pointers(void);
 
 int main(int argc, char **argv)
 {
@@ -69,7 +70,7 @@ int main(int argc, char **argv)
 		}
 	}
 
-	free_all_pointers_and_buffer();
+	free_buffer_pointers();
 	return 0;
 }
 
@@ -154,29 +155,19 @@ static int execute_command(tokens_t token)
 		break;
 	}
 
+	free_argument_pointers();
+
 	return DONT_QUIT_FLAG;
 }
 
-static void free_all_pointers_and_buffer(void)
-{
-	if(one_big_argument_pointer != NULL) {
-		free(one_big_argument_pointer);
-		one_big_argument_pointer = NULL;
-	}
-	if(first_small_argument_pointer != NULL) {
-		free(first_small_argument_pointer);
-		first_small_argument_pointer = NULL;
-	}
-	if(second_small_argument_pointer != NULL) {
-		free(second_small_argument_pointer);
-		second_small_argument_pointer = NULL;
-	}
-	if(global_filename != NULL) {
-		free(global_filename);
-		global_filename = NULL;
-	}
-	if(global_buffer != NULL) {
-		free(global_buffer);
-		global_buffer = NULL;
-	}
+static void free_argument_pointers(void) {
+	free(first_small_argument_pointer); first_small_argument_pointer = NULL;
+	free(second_small_argument_pointer); second_small_argument_pointer = NULL;
+	free(one_big_argument_pointer); one_big_argument_pointer = NULL;
 }
+
+static void free_buffer_pointers(void) {
+	free(global_filename); global_filename = NULL;
+	free(global_buffer); global_buffer = NULL;
+}
+

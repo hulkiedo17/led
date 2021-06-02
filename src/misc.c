@@ -113,5 +113,9 @@ void set_filename(const char* const string)
 
 void print_filename(void)
 {
-	printf("filename = %s\n", global_filename);
+	if(global_filename == NULL) {
+		printf("filename not specified\n");
+	} else {
+		printf("filename = %s\n", global_filename);
+	}
 }
