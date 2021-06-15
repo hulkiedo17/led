@@ -24,7 +24,9 @@ static void free_buffer_pointers(void);
 
 int main(int argc, char **argv)
 {
-	int result, help_flag = 0, version_flag = 0;
+	int result;
+	int help_flag = 0;
+	int version_flag = 0;
 	tokens_t token = { UNKNOWN_TYPE, UNKNOWN_TOKEN };
 	char* input_buffer = NULL;
 	const char* short_opt = "hvf:";
@@ -106,7 +108,7 @@ static int execute_command(tokens_t token)
 	case APPEND:
 		append_data(SKIP_NEW_LINE);
 		break;
-	case APPEND_WITH_NEW_LINE:
+	case APPEND_NL:
 		append_data(DONT_SKIP_NEW_LINE);
 		break;
 	case PRINT_BY_CHAR:

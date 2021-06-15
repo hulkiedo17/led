@@ -3,8 +3,8 @@
 #include <string.h>
 #include "../include/misc.h"
 
-char* prompt_pointer = NULL;
-const char* const default_prompt = ">";
+static char* prompt_pointer = NULL;
+static const char* const default_prompt = ">";
 
 void print_prompt(void)
 {
