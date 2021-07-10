@@ -15,19 +15,11 @@ To see commands and command line arguments, use this flags: -h or --help
 ## How to launch
 This program work only on linux(ubuntu)
 
-Required tools: gcc, make, shell(bash)
+Required tools: gcc, cmake, make, shell(bash)
 
 To compile program type this:
 ```shell
-$ ./configure
+$ mkdir build && cd build
+$ cmake ..
 $ make
-$ sudo make install
 ```
-
-if you want to delete program(after installation), type:
-```shell
-$ sudo make uninstall
-```
-
-By the way, if you build a project without debug symbols, then do not be surprised by the warnings that will be issued during the build, this does not affect the performance, bit this will be fixed in the future.
-
