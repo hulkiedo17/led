@@ -5,7 +5,10 @@ project(led
 	DESCRIPTION "Led - line-oriented text editor"
 	LANGUAGES C)
 
-option(BUILD_DEBUG "Enable debug flags" ON)
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+	set(CMAKE_C_FLAGS_DEBUG "-Wall -Wextra -Werror -g -O0")
+	set(CMAKE_C_FLAGS_RELEASE "-O2")
+endif()
 
 set(SOURCE src/append.c src/buffer.c src/buffer.c 
 	src/delete.c src/file.c src/insert.c src/io.c
@@ -18,13 +21,5 @@ set(EXECUTABLE led)
 
 add_executable(${EXECUTABLE} ${HEADER} ${SOURCE})
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	target_compile_features(${EXECUTABLE} PRIVATE c_std_11)
-
-	if(BUILD_DEBUG EQUAL ON)
-		target_compile_options(${EXECUTABLE} PRIVATE -Wall -Wextra -Werror -g)
-	else()
-		target_compile_options(${EXECUTABLE} PRIVATE -O2)
-	endif()
-endif()
+target_compile_features(${EXECUTABLE} PRIVATE c_std_11)
 
