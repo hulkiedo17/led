@@ -57,14 +57,15 @@ size_t get_buffer_size(const char* const buffer)
 
 size_t get_number_of_lines(const char* const buffer)
 {
-	size_t new_line_counter, count, bufsize = get_buffer_size(buffer);
+	size_t new_line_counter = 1;
+	size_t count;
+	size_t bufsize;
 
-	if(bufsize == 0) {
+	if((bufsize = get_buffer_size(buffer)) == 0) {
 		//warning(stderr, "buffer is empty\n");
-		return 0;
+		return bufsize;
 	}
 
-	new_line_counter = 1;
 	for(count = 0; count < bufsize; count++) {
 		if(buffer[count] == '\n') {
 			new_line_counter++;
@@ -76,9 +77,11 @@ size_t get_number_of_lines(const char* const buffer)
 
 int get_position_at_line(const char* const buffer, size_t line_number)
 {
-	size_t new_line_counter = 1, count, bufsize = get_buffer_size(buffer);
+	size_t new_line_counter = 1;
+	size_t count;
+	size_t bufsize;
 
-	if(bufsize == 0) {
+	if((bufsize = get_buffer_size(buffer)) == 0) {
 		//warning(stderr, "buffer is empty\n");
 		return -1;
 	}
@@ -110,9 +113,13 @@ void clean_buffer(void)
 
 void print_buffer(const char* const buffer, char* line, uint8_t numbered_lines_flag)
 {
-	size_t count_lines = 1, number_of_lines = get_number_of_lines(buffer);
-	int line_position, line_position2;
+	size_t count_lines = 1;
+	size_t number_of_lines;
+	int line_position;
+	int line_position2;
 	long line_number;
+
+	number_of_lines = get_number_of_lines(buffer);
 
 	if(is_buffer_empty(buffer) == true) {
 		printf("buffer is empty\n");
@@ -120,7 +127,7 @@ void print_buffer(const char* const buffer, char* line, uint8_t numbered_lines_f
 	} else {
 		if(line != NULL) {
 			line_number = strtol(line, NULL, 10);
-			
+
 			if((line_number < (long)1) || (line_number > (long)number_of_lines)) {
 				printf("warninig: out of lines\n");
 				return;
@@ -201,4 +208,9 @@ void print_buffer_by_char(const char* const buffer)
 			printf("\'%c\' ", buffer[i]);
 		}
 	}
+}
+
+void free_buffer_pointers(void) {
+	free(global_filename); global_filename = NULL;
+	free(global_buffer); global_buffer = NULL;
 }

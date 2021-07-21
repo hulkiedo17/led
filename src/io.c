@@ -11,7 +11,8 @@ char* read_from_stream(FILE* stream, uint8_t new_line_flag)
 	}
 
 	int input_buffer_size = IBUF_SIZE;
-	int c, position = 0;
+	int c;
+	int position = 0;
 	char* input_buffer = calloc(input_buffer_size, sizeof(char));
 	if(input_buffer == NULL) {
 		fail(stderr, "error: allocation error for input buffer\n");

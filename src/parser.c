@@ -10,7 +10,7 @@
 static const char* const command_list[] = {
 	"q", "sp", "sd", "cs", "c", "p", "pl",
 	"a", "an", "pc", "sf", "pf", "w", "wa",
-	"f", "fn", "ia", "ian", "ib", "ibn", 
+	"f", "fn", "ia", "ian", "ib", "ibn",
 	"dl", "dr"
 };
 
@@ -131,4 +131,10 @@ tokens_t parse_command(const char* const input_buffer)
 
 	free(local_input_buffer);
 	return command_token;
+}
+
+void free_argument_pointers(void) {
+	free(first_small_argument_pointer); first_small_argument_pointer = NULL;
+	free(second_small_argument_pointer); second_small_argument_pointer = NULL;
+	free(one_big_argument_pointer); one_big_argument_pointer = NULL;
 }

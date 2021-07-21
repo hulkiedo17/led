@@ -22,6 +22,7 @@ void print_prompt(void)
 void set_custom_prompt(const char* const string)
 {
 	if(string == NULL) {
+		warning(stderr, "there is no prompt line\n");
 		return;
 	}
 

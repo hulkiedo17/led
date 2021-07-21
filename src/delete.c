@@ -10,7 +10,10 @@
 static char* delete(size_t position1, size_t position2)
 {
 	char* temp_buffer = NULL;
-	size_t start_position, end_position, bufsize, temp_bufsize;
+	size_t start_position;
+	size_t end_position;
+	size_t bufsize;
+	size_t temp_bufsize;
 
 	if((bufsize = get_buffer_size(global_buffer)) == 0) {
 		return NULL;
@@ -59,8 +62,11 @@ static char* delete(size_t position1, size_t position2)
 
 void delete_line(size_t line_number)
 {
-	size_t number_of_lines = get_number_of_lines(global_buffer);
-	int position1, position2;
+	size_t number_of_lines;
+	int position1;
+	int position2;
+
+	number_of_lines = get_number_of_lines(global_buffer);
 
 	if(line_number < (size_t)1 || line_number > number_of_lines) {
 		printf("warning: out of lines\n");
@@ -106,8 +112,11 @@ void delete_range_of_lines(const char* const line1_start, const char* const line
 		return;
 	}
 
-	size_t number_of_lines = get_number_of_lines(global_buffer);
-	size_t start_line, end_line;
+	size_t number_of_lines;
+	size_t start_line;
+	size_t end_line;
+
+	number_of_lines = get_number_of_lines(global_buffer);
 
 	start_line = (size_t)strtol(line1_start, NULL, 10);
 	end_line = (size_t)strtol(line2_end, NULL, 10);

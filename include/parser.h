@@ -44,5 +44,6 @@ extern char* first_small_argument_pointer;
 extern char* second_small_argument_pointer;
 
 tokens_t parse_command(const char* const input_buffer);
+void free_argument_pointers(void);
 
 #endif

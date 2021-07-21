@@ -14,5 +14,6 @@ int get_position_at_line(const char* const buffer, size_t line_number);
 void clean_buffer(void);
 void print_buffer(const char* const buffer, char* line, uint8_t numbered_lines_flag);
 void print_buffer_by_char(const char* const buffer);
+void free_buffer_pointers(void);
 
 #endif

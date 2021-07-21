@@ -42,15 +42,15 @@ void help(void)
 	printf("\tq  - quit\n");
 	printf("\tsp [str] - set custom prompt\n");
 	printf("\tsd - set default prompt\n");
+	printf("\tsf [file] - set filename\n");
 	printf("\tcs - clear screen\n");
 	printf("\tc  - clean buffer\n");
 	printf("\tp  - print buffer\n");
 	printf("\tpl - print buffer with numbered lines\n");
+	printf("\tpc - print buffer by characters\n");
+	printf("\tpf - print filename\n");
 	printf("\ta  - append data to buffer(wihtout \\n)\n");
 	printf("\tan - append data to buffer(with \\n)\n");
-	printf("\tpc - print buffer by characters\n");
-	printf("\tsf [file] - set filename\n");
-	printf("\tpf - print filename\n");
 	printf("\tw [file] - safe buffer to file\n");
 	printf("\twa [file] - safe buffer to file(append, not rewrite)\n");
 	printf("\tf [file] - fill buffer from file\n");
@@ -61,12 +61,11 @@ void help(void)
 	printf("\tibn [line] [str] - insert data before specified line(with \\n)\n");
 	printf("\tdl [line] - delete the specified line\n");
 	printf("\tdr [line1] [line2] - delete the lines in the specified range\n");
-	putchar('\n');
 }
 
 void version(void)
 {
-	printf("led version - v%s\n\n", program_version);
+	printf("led version - v%s\n", program_version);
 }
 
 void clean_screen(void)
@@ -81,15 +80,15 @@ char* dup_string(const char* const string)
 		return NULL;
 	}
 
-	char* dup_string = NULL;
 	size_t length;
+	char* dup_string = NULL;
 
 	length = strlen(string) + 1;
 	dup_string = malloc(length * sizeof(char));
 	if(dup_string == NULL) {
 		fail(stderr, "error: allocation eror for duplicated string\n");
 	}
-	
+
 	strncpy(dup_string, string, length);
 	return dup_string;
 }
@@ -97,7 +96,7 @@ char* dup_string(const char* const string)
 void set_filename(const char* const string)
 {
 	if(string == NULL) {
-		warning(stderr, "warning: null string pointer\n");
+		warning(stderr, "there is no filename\n");
 		return;
 	}
 

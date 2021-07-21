@@ -30,6 +30,7 @@ void save_buffer(char* filename, char* mode)
 		printf("buffer is empty\n");
 		return;
 	}
+	buffer_length--;	// write without '\0' character
 
 	current_filename = choose_filename(filename);
 	if(current_filename == NULL) {
@@ -40,11 +41,14 @@ void save_buffer(char* filename, char* mode)
 	fp = fopen(current_filename, mode);
 	if(fp == NULL) {
 		warning(stderr, "warning: cannot save buffer - file can't open or doesn't exists\n");
+		return;
 	}
 
-	if(fwrite(global_buffer, buffer_length - 1, 1, fp) != 1) {
+	if(fwrite(global_buffer, buffer_length, 1, fp) != 1) {
 		fail(stderr, "error: fwrite() failed\n");
 	}
+
+	printf("written %zd bytes\n", buffer_length);
 
 	fclose(fp);
 	is_data_saved = true;
