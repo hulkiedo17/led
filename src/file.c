@@ -20,7 +20,7 @@ static char* choose_filename(char* filename)
 	return filename;
 }
 
-void save_buffer(char* filename, char* mode)
+void save_buffer(char* filename, const char* mode)
 {
 	FILE* fp = NULL;
 	char* current_filename = NULL;

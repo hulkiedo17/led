@@ -12,8 +12,12 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
 	endif()
 endif()
 
+set(BIN_DIR /bin)
 set(SOURCE src/append.c src/buffer.c src/buffer.c src/delete.c src/file.c src/insert.c src/io.c src/misc.c src/parser.c src/prompt.c src/main.c src/execute.c)
 set(HEADER include/append.h include/buffer.h include/delete.h include/file.h include/insert.h include/io.h include/misc.h include/parser.h include/prompt.h include/main.h include/execute.h)
 set(EXECUTABLE led)
 
 add_executable(${EXECUTABLE} ${HEADER} ${SOURCE})
+
+#install(TARGETS ${EXECUTABLE} DESTINATION ${BIN_DIR})
+INSTALL_TARGETS(/bin ${EXECUTABLE})

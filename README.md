@@ -19,7 +19,12 @@ Required tools: gcc, cmake, make, shell(bash)
 
 To compile program type this:
 ```shell
+$ ./build.sh -r
+```
+Or use more familiar way:
+```shell
 $ mkdir build && cd build
-$ cmake ..
+$ cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=/usr/local/ ..
 $ make
+$ sudo make install
 ```
