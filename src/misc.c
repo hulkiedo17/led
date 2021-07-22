@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include "../include/main.h"
+#include "../include/buffer.h"
 
 static const char* const  program_version = "0.3";
 
@@ -68,9 +70,11 @@ void version(void)
 	printf("led version - v%s\n", program_version);
 }
 
-void clean_screen(void)
+int clean_screen(void)
 {
-	system("clear");
+	// just hide compiler warning
+	int result = system("clear");
+	return result;
 }
 
 char* dup_string(const char* const string)
@@ -83,7 +87,8 @@ char* dup_string(const char* const string)
 	size_t length;
 	char* dup_string = NULL;
 
-	length = strlen(string) + 1;
+	// length = strlen(string) + 1	// another compiler warning
+	length = buflen(string) + 1;
 	dup_string = malloc(length * sizeof(char));
 	if(dup_string == NULL) {
 		fail(stderr, "error: allocation eror for duplicated string\n");

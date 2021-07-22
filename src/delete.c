@@ -46,7 +46,11 @@ static char* delete(size_t position1, size_t position2)
 
 	strncpy(temp_buffer, global_buffer, start_position);
 	if(end_position == bufsize - 1) {
-		temp_buffer[start_position - 1] = '\0';
+		if(start_position != 0) {
+			temp_buffer[start_position - 1] = '\0';
+		} else {
+			strncpy(temp_buffer, global_buffer + end_position, bufsize - end_position);
+		}
 	} else {
 		strncpy(temp_buffer + start_position, global_buffer + end_position, bufsize - end_position);
 	}
@@ -115,6 +119,8 @@ void delete_range_of_lines(const char* const line1_start, const char* const line
 	size_t number_of_lines;
 	size_t start_line;
 	size_t end_line;
+	long start_line_position;
+	long end_line_position;
 
 	number_of_lines = get_number_of_lines(global_buffer);
 
@@ -131,15 +137,37 @@ void delete_range_of_lines(const char* const line1_start, const char* const line
 		return;
 	}
 
-	// TODO: how can i/you optimize this?
-	// answer: dont use 10 delete_line() calls to delete 10 lines,
-	// use 1 call delete() from (start line position) to (end line position + 1)
-
 	if(start_line == end_line) {
 		delete_line(start_line);
 	} else {
-		for(size_t i = 0; i <= (end_line - start_line); i++) {
-			delete_line(start_line);
+		if(start_line == 0) {
+			start_line_position = 0;
+		} else {
+			if((start_line_position = get_position_at_line(global_buffer, start_line)) == -1) {
+				warning(stderr, "warning: get_number_of_lines() failed\n");
+				return;
+			}
+		}
+
+		if(end_line == number_of_lines) {
+			end_line_position = get_buffer_size(global_buffer);
+		} else {
+			if((end_line_position = get_position_at_line(global_buffer, end_line + 1)) == -1) {
+				warning(stderr, "warning: get_number_of_lines() failed\n");
+				return;
+			}
+		}
+
+		if(start_line_position == 0 && (size_t)end_line_position == get_buffer_size(global_buffer)) {
+			clean_buffer();
+		} else {
+			if(end_line == number_of_lines - 1) {
+				end_line_position++;
+			}
+			if(delete(start_line_position, end_line_position - 1) == NULL) { // -1 because '\0'
+				warning(stderr, "warning: delete() failed\n");
+				return;
+			}
 		}
 	}
 }

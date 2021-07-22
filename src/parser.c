@@ -91,9 +91,12 @@ tokens_t parse_command(const char* const input_buffer)
 	size_t first_arg_size;
 	size_t second_arg_size;
 	size_t big_arg_size;
+	size_t local_input_buffer_size;
 
-	local_input_buffer = alloc_buffer(strlen(input_buffer) + 1);
-	strncpy(local_input_buffer, input_buffer, strlen(input_buffer) + 1);
+	local_input_buffer_size = strlen(input_buffer) + 1;
+
+	local_input_buffer = alloc_buffer(local_input_buffer_size);
+	strncpy(local_input_buffer, input_buffer, local_input_buffer_size);
 
 	command_without_args = strtok(local_input_buffer, " ");
 	command_token = get_command_token(command_without_args);
