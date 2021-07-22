@@ -17,9 +17,9 @@ This program work only on linux(ubuntu)
 
 Required tools: gcc, cmake, make, shell(bash)
 
-To compile program type this:
+To compile and install program type this:
 ```shell
-$ ./build.sh -r
+$ ./build.sh
 ```
 Or use more familiar way:
 ```shell

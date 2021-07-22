@@ -69,7 +69,7 @@ void delete_line(size_t line_number)
 	number_of_lines = get_number_of_lines(global_buffer);
 
 	if(line_number < (size_t)1 || line_number > number_of_lines) {
-		printf("warning: out of lines\n");
+		printf("out of lines\n");
 		return;
 	}
 

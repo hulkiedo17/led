@@ -27,36 +27,25 @@ clean() {
 
 help() {
 	printf "[cli options]:\n"
-	printf "\t-d (--debug)   - \n"
-	printf "\t-r (--release) - \n"
-	printf "\t-c (--clean)   - \n"
-	printf "\t-h (--help)    - \n"
+	printf "\t-d - compile and install debug version\n"
+	printf "\t-r - compile and install release version\n"
+	printf "\t-c - delete compiled object files\n"
+	printf "\t-h - prints help message\n"
 }
 
 check_options() {
-	while [[ $# -gt 0 ]]; do
-		key="$1"
-		case $key in
-			-d|--debug)
-				debug
-				shift
-				;;
-			-r|--release)
-				release
-				shift
-				;;
-			-c|--clean)
-				clean
-				shift
-				;;
-			-h|--help)
-				help
-				shift
-				;;
-			*)
-				print "unknown option"
-				shift
-				;;
+	if [ -z $* ]; then
+		release
+		exit 0
+	fi
+
+	while getopts "drch" opt; do
+		case $opt in
+			d) debug ;;
+			r) release ;;
+			c) clean ;;
+			h) help ;;
+			*) echo "unknown option" ;;
 		esac
 	done
 }
