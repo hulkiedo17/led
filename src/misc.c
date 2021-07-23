@@ -7,7 +7,7 @@
 #include "../include/main.h"
 #include "../include/buffer.h"
 
-static const char* const  program_version = "0.3";
+static const char* const  program_version = "0.4";
 
 void fail(FILE* out, const char* fmt, ...)
 {
