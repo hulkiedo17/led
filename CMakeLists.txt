@@ -6,10 +6,8 @@ project(led
 	LANGUAGES C)
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-	if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-		set(CMAKE_C_FLAGS_DEBUG "-std=c11 -Wall -Wextra -Werror -Wpedantic -Wformat=2 -Wshadow -Wunused-parameter -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wlogical-op -g -O0")
-		set(CMAKE_C_FLAGS_RELEASE "-std=c11 -O2")
-	endif()
+	set(CMAKE_C_FLAGS_DEBUG "-std=c11 -Wall -Wextra -Werror -Wpedantic -Wformat=2 -Wshadow -Wunused-parameter -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wlogical-op -g -O0")
+	set(CMAKE_C_FLAGS_RELEASE "-std=c11 -O2")
 endif()
 
 set(BIN_DIR /bin)
