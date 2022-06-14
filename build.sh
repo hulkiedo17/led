@@ -1,10 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 prefix=/usr/local/
 
 debug() {
 	mkdir -p build
-	cd build
+	cd build || exit
 
 	cmake "-DCMAKE_BUILD_TYPE=DEBUG" "-DCMAKE_INSTALL_PREFIX=$prefix" ".."
 	make
@@ -13,7 +13,7 @@ debug() {
 
 release() {
 	mkdir -p build
-	cd build
+	cd build || exit
 
 	cmake "-DCMAKE_BUILD_TYPE=RELEASE" "-DCMAKE_INSTALL_PREFIX=$prefix" ".."
 	make
@@ -21,11 +21,11 @@ release() {
 }
 
 clean() {
-	cd build
+	cd build || exit
 	make clean
 }
 
-help() {
+help_msg() {
 	printf "[cli options]:\n"
 	printf "\t-d - compile and install debug version\n"
 	printf "\t-r - compile and install release version\n"
@@ -34,7 +34,7 @@ help() {
 }
 
 check_options() {
-	if [ -z $* ]; then
+	if [ -z "$*" ]; then
 		release
 		exit 0
 	fi
@@ -44,7 +44,7 @@ check_options() {
 			d) debug ;;
 			r) release ;;
 			c) clean ;;
-			h) help ;;
+			h) help_msg ;;
 			*) echo "unknown option" ;;
 		esac
 	done
