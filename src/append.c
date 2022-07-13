@@ -3,9 +3,9 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "../include/main.h"
-#include "../include/io.h"
-#include "../include/buffer.h"
+#include "main.h"
+#include "io.h"
+#include "buffer.h"
 
 void append_data(uint8_t new_line_flag)
 {

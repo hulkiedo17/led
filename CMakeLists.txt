@@ -6,16 +6,27 @@ project(led
 	LANGUAGES C)
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-	set(CMAKE_C_FLAGS_DEBUG "-std=c11 -Wall -Wextra -Werror -Wpedantic -Wformat=2 -Wshadow -Wunused-parameter -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wlogical-op -g -O0")
-	set(CMAKE_C_FLAGS_RELEASE "-std=c11 -O2")
+	set(CMAKE_C_FLAGS_DEBUG "-std=c2x -Wall -Wextra -Werror -Wpedantic -Wformat=2 -Wshadow -Wunused-parameter -Wwrite-strings -Wstrict-prototypes -Wold-style-definition -Wredundant-decls -Wnested-externs -Wmissing-include-dirs -Wlogical-op -g -O0")
+	set(CMAKE_C_FLAGS_RELEASE "-std=c2x -O2")
 endif()
 
-set(BIN_DIR /bin)
-set(SOURCE src/append.c src/buffer.c src/buffer.c src/delete.c src/file.c src/insert.c src/io.c src/misc.c src/parser.c src/prompt.c src/main.c src/execute.c)
-set(HEADER include/append.h include/buffer.h include/delete.h include/file.h include/insert.h include/io.h include/misc.h include/parser.h include/prompt.h include/main.h include/execute.h)
+set(SOURCE
+	src/append.c
+	src/buffer.c
+	src/buffer.c
+	src/delete.c
+	src/file.c
+	src/insert.c
+	src/io.c
+	src/misc.c
+	src/parser.c
+	src/prompt.c
+	src/main.c
+	src/execute.c)
 set(EXECUTABLE led)
 
-add_executable(${EXECUTABLE} ${HEADER} ${SOURCE})
+add_executable(${EXECUTABLE} ${SOURCE})
 
-#install(TARGETS ${EXECUTABLE} DESTINATION ${BIN_DIR})
-INSTALL_TARGETS(/bin ${EXECUTABLE})
+target_include_directories(${EXECUTABLE} PRIVATE include/)
+
+install(TARGETS ${EXECUTABLE} DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)

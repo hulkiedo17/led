@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdbool.h>
-#include "../include/main.h"
-#include "../include/buffer.h"
+#include "main.h"
+#include "buffer.h"
 
 static const char* const  program_version = "0.4";
 

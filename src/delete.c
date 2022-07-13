@@ -3,9 +3,9 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "../include/main.h"
-#include "../include/misc.h"
-#include "../include/buffer.h"
+#include "main.h"
+#include "misc.h"
+#include "buffer.h"
 
 static char* delete(size_t position1, size_t position2)
 {

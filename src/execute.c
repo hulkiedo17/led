@@ -2,16 +2,16 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "../include/main.h"
-#include "../include/prompt.h"
-#include "../include/parser.h"
-#include "../include/buffer.h"
-#include "../include/append.h"
-#include "../include/delete.h"
-#include "../include/insert.h"
-#include "../include/file.h"
-#include "../include/misc.h"
-#include "../include/io.h"
+#include "main.h"
+#include "prompt.h"
+#include "parser.h"
+#include "buffer.h"
+#include "append.h"
+#include "delete.h"
+#include "insert.h"
+#include "file.h"
+#include "misc.h"
+#include "io.h"
 
 int execute_command(tokens_t token)
 {

@@ -3,17 +3,17 @@
 #include <stdint.h>
 #include <getopt.h>
 #include <stdbool.h>
-#include "../include/misc.h"
-#include "../include/prompt.h"
-#include "../include/io.h"
-#include "../include/parser.h"
-#include "../include/main.h"
-#include "../include/buffer.h"
-#include "../include/append.h"
-#include "../include/file.h"
-#include "../include/insert.h"
-#include "../include/delete.h"
-#include "../include/execute.h"
+#include "misc.h"
+#include "prompt.h"
+#include "io.h"
+#include "parser.h"
+#include "main.h"
+#include "buffer.h"
+#include "append.h"
+#include "file.h"
+#include "insert.h"
+#include "delete.h"
+#include "execute.h"
 
 char* global_buffer = NULL;
 char* global_filename = NULL;

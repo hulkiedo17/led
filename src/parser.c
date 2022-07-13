@@ -3,9 +3,9 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "../include/misc.h"
-#include "../include/parser.h"
-#include "../include/buffer.h"
+#include "misc.h"
+#include "parser.h"
+#include "buffer.h"
 
 static const char* const command_list[] = {
 	"q", "sp", "sd", "cs", "c", "p", "pl",

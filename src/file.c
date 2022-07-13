@@ -3,10 +3,10 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "../include/main.h"
-#include "../include/misc.h"
-#include "../include/buffer.h"
-#include "../include/io.h"
+#include "main.h"
+#include "misc.h"
+#include "buffer.h"
+#include "io.h"
 
 static char* choose_filename(char* filename)
 {

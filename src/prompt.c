@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../include/misc.h"
+#include "misc.h"
 
 static char* prompt_pointer = NULL;
 static const char* const default_prompt = ">";

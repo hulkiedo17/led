@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "../include/misc.h"
-#include "../include/main.h"
-#include "../include/buffer.h"
+#include "misc.h"
+#include "main.h"
+#include "buffer.h"
 
 bool is_buffer_empty(const char * const buffer)
 {
