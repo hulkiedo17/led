@@ -24,15 +24,8 @@ int main(int argc, char **argv)
 	int result;
 	tokens_t token = { UNKNOWN_TYPE, UNKNOWN_TOKEN };
 	char* input_buffer = NULL;
-	const char* short_opt = "hvf:";
-	const struct option long_opt[] = {
-		{"help", no_argument, NULL, 'h'},
-		{"version", no_argument, NULL, 'v'},
-		{"filename", required_argument, NULL, 'f'},
-		{NULL, 0, NULL, 0}
-	};
 
-	while((result = getopt_long(argc, argv, short_opt, long_opt, NULL)) != -1) {
+	while((result = getopt(argc, argv, "hvf:")) != -1) {
 		switch(result) {
 		case 'h':
 			help();
