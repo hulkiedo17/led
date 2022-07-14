@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,13 +32,10 @@ void set_custom_prompt(const char* const string)
 		prompt_pointer = NULL;
 	}
 
-	size_t len = strlen(string) + 1;
-	prompt_pointer = malloc(len * sizeof(char));
+	prompt_pointer = strdup(string);
 	if(prompt_pointer == NULL) {
 		fail(stderr, "error: allocation error for prompt pointer\n");
 	}
-
-	strncpy(prompt_pointer, string, len);
 }
 
 void set_default_prompt(void)

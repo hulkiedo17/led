@@ -1,13 +1,14 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include <ctype.h>
 #include <stdbool.h>
-#include "../include/buffer.h"
-#include "../include/main.h"
-#include "../include/io.h"
-#include "../include/misc.h"
+#include "buffer.h"
+#include "main.h"
+#include "io.h"
+#include "misc.h"
 
 static bool check_for_correct_arguments(const char* const argument)
 {
@@ -46,7 +47,7 @@ static char* get_tokens_from_argument(const char* const argument, long *line_num
 	char* temp_string = NULL;
 	const char* temp_data = NULL;
 
-	temp_string = dup_string(argument);
+	temp_string = strdup(argument);
 	if(check_for_correct_arguments(argument) == false) {
 		free(temp_string);
 		return NULL;

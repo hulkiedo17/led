@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
-#include "../include/misc.h"
-#include "../include/io.h"
+#include "misc.h"
+#include "io.h"
 
 char* read_from_stream(FILE* stream, uint8_t new_line_flag)
 {

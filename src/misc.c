@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -77,27 +78,6 @@ int clean_screen(void)
 	return result;
 }
 
-char* dup_string(const char* const string)
-{
-	if(string == NULL) {
-		warning(stderr, "warning: null string pointer\n");
-		return NULL;
-	}
-
-	size_t length;
-	char* dup_string = NULL;
-
-	// length = strlen(string) + 1	// another compiler warning
-	length = buflen(string) + 1;
-	dup_string = malloc(length * sizeof(char));
-	if(dup_string == NULL) {
-		fail(stderr, "error: allocation eror for duplicated string\n");
-	}
-
-	strncpy(dup_string, string, length);
-	return dup_string;
-}
-
 void set_filename(const char* const string)
 {
 	if(string == NULL) {
@@ -109,7 +89,7 @@ void set_filename(const char* const string)
 		free(global_filename);
 	}
 
-	global_filename = dup_string(string);
+	global_filename = strdup(string);
 	if(global_filename == NULL) {
 		fail(stderr, "error: null global filename pointer\n");
 	}
