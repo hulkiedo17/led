@@ -1,8 +1,14 @@
-# led
+# What is this?
 led is a line-oriented text editor in command line. This editor is similar to the standard program on unix systems - GNU ed. But i'm not going to make an exact clone of that program, it's just a pet project.
 
 # Features
-Now the program can save text to its buffer, it can also write or add text from the buffer to a file, show the contents of the buffer, delete or insert lines of text from the buffer. 
+
+Now the program can:
+- save text to it's buffer
+- write or append text to file
+- show the contents of the buffer
+- insert or delete text in buffer
+- set own prompt in editor
 
 # Example of usage
 
