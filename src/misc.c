@@ -32,16 +32,14 @@ void warning(FILE* out, const char* fmt, ...)
 
 void help(void)
 {
-	puts("usage: led [options...]");
-	putchar('\n');
+	printf("usage: led [options...]\n\n");
 
-	puts("[cli options]:");
-	printf("\t-h (--help)    - prints this help message\n");
-	printf("\t-v (--version) - shows the program version\n");
-	printf("\t-f [file] (--filename) - set the filename by default\n");
-	putchar('\n');
+	printf("[cli options]:\n");
+	printf("\t-h        - prints this help message\n");
+	printf("\t-v        - shows the program version\n");
+	printf("\t-f [file] - set the filename by default\n\n");
 
-	puts("[program commands]:");
+	printf("[program commands]:\n");
 	printf("\tq  - quit\n");
 	printf("\tsp [str] - set custom prompt\n");
 	printf("\tsd - set default prompt\n");

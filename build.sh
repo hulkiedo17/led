@@ -26,7 +26,9 @@ clean() {
 }
 
 help_msg() {
-	printf "[cli options]:\n"
+	printf "usage: ./build.sh [options...]\n\n"
+
+	printf "options:\n"
 	printf "\t-d - compile and install debug version\n"
 	printf "\t-r - compile and install release version\n"
 	printf "\t-c - delete compiled object files\n"
