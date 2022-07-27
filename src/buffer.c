@@ -31,7 +31,7 @@ size_t buflen(const char* const buffer)
 
 char* alloc_buffer(size_t size)
 {
-	char* buffer = malloc(size * sizeof(char));
+	char* buffer = malloc(size);
 	if(buffer == NULL) {
 		fail(stderr, "error: allocation error for new buffer\n");
 	}
