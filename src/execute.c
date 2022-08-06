@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <limits.h>
 #include "main.h"
 #include "prompt.h"
 #include "parser.h"
@@ -12,6 +13,24 @@
 #include "file.h"
 #include "misc.h"
 #include "io.h"
+
+static size_t get_number(const char *line)
+{
+	if(!line)
+	{
+		printf("invalid number\n");
+		return 0;
+	}
+
+	size_t number = strtoul(line, NULL, 10);
+	if(number == 0 || number == ULONG_MAX)
+	{
+		printf("invalid number\n");
+		return 0;
+	}
+
+	return number;
+}
 
 int execute_command(tokens_t token)
 {
@@ -30,9 +49,6 @@ int execute_command(tokens_t token)
 		break;
 	case SET_DEFAULT_PROMPT:
 		set_default_prompt();
-		break;
-	case CLEAN_SCREEN:
-		clean_screen();
 		break;
 	case CLEAN_BUFFER:
 		clean_buffer();
@@ -83,7 +99,10 @@ int execute_command(tokens_t token)
 		insert_before(one_big_argument_pointer, DONT_SKIP_NEW_LINE);
 		break;
 	case DELETE_LINE:
-		temp_val = (size_t)strtol(first_small_argument_pointer, NULL, 10);
+		temp_val = get_number(first_small_argument_pointer);
+		if(temp_val == 0)
+			break;
+
 		delete_line(temp_val);
 		break;
 	case DELETE_LINES_IN_RANGE:

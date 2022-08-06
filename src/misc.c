@@ -44,7 +44,6 @@ void help(void)
 	printf("\tsp [str] - set custom prompt\n");
 	printf("\tsd - set default prompt\n");
 	printf("\tsf [file] - set filename\n");
-	printf("\tcs - clear screen\n");
 	printf("\tc  - clean buffer\n");
 	printf("\tp  - print buffer\n");
 	printf("\tpl - print buffer with numbered lines\n");
@@ -67,13 +66,6 @@ void help(void)
 void version(void)
 {
 	printf("led version - v%s\n", program_version);
-}
-
-int clean_screen(void)
-{
-	// just hide compiler warning
-	int result = system("clear");
-	return result;
 }
 
 void set_filename(const char* const string)
