@@ -15,7 +15,7 @@ void append_data(uint8_t new_line_flag)
 
 	input_buffer = read_from_stream(stdin, DONT_SKIP_NEW_LINE);
 	while(strcmp(input_buffer, ".") != 0) {
-		if(is_buffer_empty(global_buffer) == true) {
+		if(!global_buffer) {
 			input_buffer_size = strlen(input_buffer) + 1;
 			global_buffer = alloc_buffer(input_buffer_size);
 

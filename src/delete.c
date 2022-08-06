@@ -67,25 +67,27 @@ static char* delete(size_t position1, size_t position2)
 void delete_line(size_t line_number)
 {
 	size_t number_of_lines;
-	int position1;
-	int position2;
+	size_t position1;
+	size_t position2;
+	bool is_err = false;
 
 	number_of_lines = get_number_of_lines(global_buffer);
 
-	if(line_number < (size_t)1 || line_number > number_of_lines) {
+	if(line_number < 1 || line_number > number_of_lines) {
 		printf("out of lines\n");
 		return;
 	}
 
 	// handling the last line in the buffer
-	if(line_number == (size_t)1 && number_of_lines == (size_t)1) {
+	if(line_number == 1 && number_of_lines == 1) {
 		free(global_buffer);
 		global_buffer = NULL;
 		is_data_saved = true;
 		return;
 	}
 
-	if((position1 = get_position_at_line(global_buffer, line_number)) == -1) {
+	position1 = get_position_at_line(global_buffer, line_number, &is_err);
+	if(is_err) {
 		warning(stderr, "warning: get_number_of_lines() failed\n");
 		return;
 	}
@@ -93,13 +95,14 @@ void delete_line(size_t line_number)
 	if(line_number == number_of_lines) {
 		position2 = get_buffer_size(global_buffer) - 1;
 	} else {
-		if((position2 = get_position_at_line(global_buffer, line_number + 1)) == -1) {
+		position2 = get_position_at_line(global_buffer, line_number + 1, &is_err);
+		if(is_err) {
 			warning(stderr, "warning: get_number_of_lines() failed\n");
 			return;
 		}
 	}
 
-	if(delete((size_t)position1, (size_t)position2) == NULL) {
+	if(delete(position1, position2) == NULL) {
 		warning(stderr, "warning: delete() failed\n");
 	}
 }
@@ -111,7 +114,7 @@ void delete_range_of_lines(const char* const line1_start, const char* const line
 		return;
 	}
 
-	if(is_buffer_empty(global_buffer)) {
+	if(!global_buffer) {
 		printf("buffer is empty\n");
 		return;
 	}
@@ -119,13 +122,14 @@ void delete_range_of_lines(const char* const line1_start, const char* const line
 	size_t number_of_lines;
 	size_t start_line;
 	size_t end_line;
-	long start_line_position;
-	long end_line_position;
+	size_t start_line_position;
+	size_t end_line_position;
+	bool is_err = false;
 
 	number_of_lines = get_number_of_lines(global_buffer);
 
-	start_line = (size_t)strtol(line1_start, NULL, 10);
-	end_line = (size_t)strtol(line2_end, NULL, 10);
+	start_line = get_number(line1_start);
+	end_line = get_number(line2_end);
 
 	if(start_line > 0 && end_line <= number_of_lines) {
 		if(start_line > end_line) {
@@ -143,7 +147,8 @@ void delete_range_of_lines(const char* const line1_start, const char* const line
 		if(start_line == 0) {
 			start_line_position = 0;
 		} else {
-			if((start_line_position = get_position_at_line(global_buffer, start_line)) == -1) {
+			start_line_position = get_position_at_line(global_buffer, start_line, &is_err);
+			if(is_err) {
 				warning(stderr, "warning: get_number_of_lines() failed\n");
 				return;
 			}
@@ -152,13 +157,14 @@ void delete_range_of_lines(const char* const line1_start, const char* const line
 		if(end_line == number_of_lines) {
 			end_line_position = get_buffer_size(global_buffer);
 		} else {
-			if((end_line_position = get_position_at_line(global_buffer, end_line + 1)) == -1) {
+			end_line_position = get_position_at_line(global_buffer, end_line + 1, &is_err);
+			if(is_err) {
 				warning(stderr, "warning: get_number_of_lines() failed\n");
 				return;
 			}
 		}
 
-		if(start_line_position == 0 && (size_t)end_line_position == get_buffer_size(global_buffer)) {
+		if(start_line_position == 0 && end_line_position == get_buffer_size(global_buffer)) {
 			clean_buffer();
 		} else {
 			if(end_line == number_of_lines - 1) {

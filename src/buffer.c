@@ -7,19 +7,10 @@
 #include "main.h"
 #include "buffer.h"
 
-bool is_buffer_empty(const char * const buffer)
-{
-	if(buffer == NULL) {
-		return true;
-	} else {
-		return false;
-	}
-}
-
 char* alloc_buffer(size_t size)
 {
 	char* buffer = malloc(size);
-	if(buffer == NULL) {
+	if(!buffer) {
 		fail(stderr, "error: allocation error for new buffer\n");
 	}
 	return buffer;
@@ -28,7 +19,7 @@ char* alloc_buffer(size_t size)
 char* realloc_buffer(char* buffer, size_t old_size, size_t new_data_size)
 {
 	buffer = realloc(buffer, old_size + new_data_size);
-	if(buffer == NULL) {
+	if(!buffer) {
 		fail(stderr, "error: reallocation error for buffer\n");
 	}
 	return buffer;
@@ -36,7 +27,7 @@ char* realloc_buffer(char* buffer, size_t old_size, size_t new_data_size)
 
 size_t get_buffer_size(const char* const buffer)
 {
-	if(is_buffer_empty(buffer) == false) {
+	if(buffer) {
 		return strlen(buffer) + 1;
 	}
 	return 0;
@@ -62,15 +53,15 @@ size_t get_number_of_lines(const char* const buffer)
 	return new_line_counter;
 }
 
-int get_position_at_line(const char* const buffer, size_t line_number)
+size_t get_position_at_line(const char* const buffer, size_t line_number, bool *is_err)
 {
 	size_t new_line_counter = 1;
 	size_t count;
 	size_t bufsize;
 
 	if((bufsize = get_buffer_size(buffer)) == 0) {
-		//warning(stderr, "buffer is empty\n");
-		return -1;
+		*is_err = true;
+		return 0;
 	}
 
 	for(count = 0; count < bufsize; count++) {
@@ -82,7 +73,8 @@ int get_position_at_line(const char* const buffer, size_t line_number)
 		}
 	}
 
-	return -1;
+	*is_err = true;
+	return 0;
 }
 
 void clean_buffer(void)
@@ -102,41 +94,42 @@ void print_buffer(const char* const buffer, char* line, uint8_t numbered_lines_f
 {
 	size_t count_lines = 1;
 	size_t number_of_lines;
-	int line_position;
-	int line_position2;
-	long line_number;
+	size_t line_position;
+	size_t line_position2;
+	size_t line_number;
+	bool is_err = false;
 
 	number_of_lines = get_number_of_lines(buffer);
 
-	if(is_buffer_empty(buffer) == true) {
+	if(!buffer) {
 		printf("buffer is empty\n");
 		return;
 	} else {
 		if(line != NULL) {
-			line_number = strtol(line, NULL, 10);
+			line_number = get_number(line);
 
-			if((line_number < (long)1) || (line_number > (long)number_of_lines)) {
+			if((line_number < 1) || (line_number > number_of_lines)) {
 				printf("warninig: out of lines\n");
 				return;
 			}
 
-			line_position = get_position_at_line(buffer, line_number);
-			if(line_position == -1) {
+			line_position = get_position_at_line(buffer, line_number, &is_err);
+			if(is_err) {
 				warning(stderr, "warning: get_position_at_line() failed\n");
 				return;
 			}
 
-			if(line_number == (long)number_of_lines) {
+			if(line_number == number_of_lines) {
 				line_position2 = get_buffer_size(buffer);
 			} else {
-				line_position2 = get_position_at_line(buffer, line_number + 1);
-				if(line_position2 == -1) {
+				line_position2 = get_position_at_line(buffer, line_number + 1, &is_err);
+				if(is_err) {
 					warning(stderr, "warning: get_position_at_line() failed\n");
 					return;
 				}
 			}
 
-			for(size_t i = line_position; i < (size_t)line_position2; i++) {
+			for(size_t i = line_position; i < line_position2; i++) {
 				if(buffer[i] != '\n') {
 					putchar(buffer[i]);
 				}
@@ -180,7 +173,7 @@ void print_buffer(const char* const buffer, char* line, uint8_t numbered_lines_f
 
 void print_buffer_by_char(const char* const buffer)
 {
-	if(is_buffer_empty(buffer) == true) {
+	if(!buffer) {
 		printf("buffer is empty\n");
 		return;
 	}

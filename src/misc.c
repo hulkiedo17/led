@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include "main.h"
@@ -92,4 +93,16 @@ void print_filename(void)
 	} else {
 		printf("filename = %s\n", global_filename);
 	}
+}
+
+size_t get_number(const char *line)
+{
+	if(!line)
+		return 0;
+
+	size_t number = strtoul(line, NULL, 10);
+	if(number == 0 || number == ULONG_MAX)
+		return 0;
+
+	return number;
 }

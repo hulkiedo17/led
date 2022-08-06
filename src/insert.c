@@ -38,23 +38,22 @@ static bool check_for_correct_arguments(const char* const argument)
 	return true;
 }
 
-static char* get_tokens_from_argument(const char* const argument, long *line_num_pointer)
+static char* get_tokens_from_argument(const char* const argument, size_t *line_num_pointer)
 {
 	size_t temp_data_len;
-	long line_number;
+	size_t line_number;
 	char* line = NULL;
 	char* data = NULL;
 	char* temp_string = NULL;
 	const char* temp_data = NULL;
 
-	temp_string = strdup(argument);
-	if(check_for_correct_arguments(argument) == false) {
-		free(temp_string);
+	if(check_for_correct_arguments(argument) == false)
 		return NULL;
-	}
+
+	temp_string = strdup(argument);
 
 	line = strtok(temp_string, " ");
-	line_number = strtol(line, NULL, 10);
+	line_number = get_number(line);
 	*line_num_pointer = line_number;
 
 	temp_data = argument + strlen(line) + 1;
@@ -67,7 +66,7 @@ static char* get_tokens_from_argument(const char* const argument, long *line_num
 	return data;
 }
 
-static char* insert(int position, char* data, int new_line_flag)
+static char* insert(size_t position, char* data, int new_line_flag)
 {
 	if(data == NULL) {
 		warning(stderr, "warning: null data pointer\n");
@@ -80,14 +79,13 @@ static char* insert(int position, char* data, int new_line_flag)
 
 	data_length = strlen(data) + 1;
 
-	if(is_buffer_empty(global_buffer) == false) {
+	if(!global_buffer) {
 		buffer_length = get_buffer_size(global_buffer);
 
-		if(position < 0 || position >= (int)buffer_length) {
+		if(position >= buffer_length) {
 			warning(stderr, "warning: out of buffer\n");
 			return NULL;
 		}
-
 
 		if(new_line_flag != DONT_SKIP_NEW_LINE) {
 			data_length--;
@@ -121,8 +119,9 @@ void insert_after(const char* const data, int new_line_flag)
 {
 	size_t number_of_lines;
 	size_t position;
-	long line_number = -1;
+	size_t line_number = 0;
 	char* data_pointer = NULL;
+	bool is_err = false;
 
 	number_of_lines = get_number_of_lines(global_buffer);
 	data_pointer = get_tokens_from_argument(data, &line_number);
@@ -131,20 +130,26 @@ void insert_after(const char* const data, int new_line_flag)
 		return;
 	}
 
-	if(line_number < (long)0 || line_number > (long)number_of_lines) {
+	if(line_number > number_of_lines) {
 		printf("out of lines\n");
 		free(data_pointer);
 		return;
 	}
 
-	if((size_t)line_number == number_of_lines) {
+	if(line_number == number_of_lines) {
 		if(line_number == 0) {
 			position = 0;
 		} else {
 			position = get_buffer_size(global_buffer) - 1;
 		}
 	} else {
-		position = get_position_at_line(global_buffer, line_number + 1);
+		position = get_position_at_line(global_buffer, line_number + 1, &is_err);
+		if(is_err)
+		{
+			warning(stderr, "warning: get_position_at_line() failed\n");
+			free(data_pointer);
+			return;
+		}
 	}
 
 	if(insert(position, data_pointer, new_line_flag) == NULL) {
@@ -160,8 +165,9 @@ void insert_before(const char* const data, int new_line_flag)
 {
 	size_t number_of_lines;
 	size_t position = 0;
-	long line_number = -1;
+	size_t line_number = 0;
 	char* data_pointer = NULL;
+	bool is_err = false;
 
 	number_of_lines = get_number_of_lines(global_buffer);
 	data_pointer = get_tokens_from_argument(data, &line_number);
@@ -170,17 +176,23 @@ void insert_before(const char* const data, int new_line_flag)
 		return;
 	}
 
-	if(line_number < (long)1 || line_number > (long)number_of_lines) {
+	if(line_number < 1 || line_number > number_of_lines) {
 		printf("out of lines\n");
 		free(data_pointer);
 		return;
 	}
 
-	if((size_t)line_number <= number_of_lines) {
+	if(line_number <= number_of_lines) {
 		if(line_number == 0) {
 			position = 0;
 		} else {
-			position = get_position_at_line(global_buffer, line_number);
+			position = get_position_at_line(global_buffer, line_number, &is_err);
+			if(is_err)
+			{
+				free(data_pointer);
+				warning(stderr, "warning: get_position_at_line() failed\n");
+				return;
+			}
 		}
 	}
 

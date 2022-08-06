@@ -96,12 +96,12 @@ tokens_t parse_command(const char* const input_buffer)
 	local_input_buffer = alloc_buffer(local_input_buffer_size);
 	strncpy(local_input_buffer, input_buffer, local_input_buffer_size);
 
-	command_without_args = strtok(local_input_buffer, " ");
+	command_without_args = strtok(local_input_buffer, " \t\n");
 	command_token = get_command_token(command_without_args);
 
 	if(command_token.command_arg_type == USES_A_FEW_SMALL_ARGS) {
-		first_arg_ptr = strtok(NULL, " ");
-		second_arg_ptr = strtok(NULL, " ");
+		first_arg_ptr = strtok(NULL, " \t\n");
+		second_arg_ptr = strtok(NULL, " \t\n");
 
 		if(first_arg_ptr != NULL) {
 			first_arg_size = strlen(first_arg_ptr) + 1;
