@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include "misc.h"
@@ -13,20 +14,6 @@ bool is_buffer_empty(const char * const buffer)
 	} else {
 		return false;
 	}
-}
-
-size_t buflen(const char* const buffer)
-{
-	size_t i = 0;
-	if(buffer == NULL) {
-		return i;
-	}
-
-	while(buffer[i] != '\0') {
-		i++;
-	}
-
-	return i;
 }
 
 char* alloc_buffer(size_t size)
@@ -50,7 +37,7 @@ char* realloc_buffer(char* buffer, size_t old_size, size_t new_data_size)
 size_t get_buffer_size(const char* const buffer)
 {
 	if(is_buffer_empty(buffer) == false) {
-		return buflen(buffer) + 1;
+		return strlen(buffer) + 1;
 	}
 	return 0;
 }
@@ -168,7 +155,7 @@ void print_buffer(const char* const buffer, char* line, uint8_t numbered_lines_f
 
 			count_lines++;
 
-			for(size_t i = 0; i < buflen(buffer); i++) {
+			for(size_t i = 0; i < strlen(buffer); i++) {
 				putchar(buffer[i]);
 
 				if(buffer[i] == '\n') {
@@ -198,7 +185,7 @@ void print_buffer_by_char(const char* const buffer)
 		return;
 	}
 
-	for(size_t i = 0; i < buflen(buffer) + 1; i++) {
+	for(size_t i = 0; i < strlen(buffer) + 1; i++) {
 		if(buffer[i] == '\0') {
 			printf("\'\\0\'\n");
 			break;

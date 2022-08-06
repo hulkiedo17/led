@@ -19,7 +19,7 @@ static bool check_for_correct_arguments(const char* const argument)
 	size_t i = 0;
 	size_t size;
 
-	size = buflen(argument) + 1;
+	size = strlen(argument) + 1;
 
 	if(!isdigit(argument[i])) {
 		return false;
@@ -78,7 +78,7 @@ static char* insert(int position, char* data, int new_line_flag)
 	size_t buffer_length;
 	char* temp_buffer = NULL;
 
-	data_length = buflen(data) + 1;
+	data_length = strlen(data) + 1;
 
 	if(is_buffer_empty(global_buffer) == false) {
 		buffer_length = get_buffer_size(global_buffer);

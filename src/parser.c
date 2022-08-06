@@ -8,14 +8,13 @@
 #include "buffer.h"
 
 static const char* const command_list[] = {
-	"q", "sp", "sd", "cs", "c", "p", "pl",
-	"a", "an", "pc", "sf", "pf", "w", "wa",
-	"f", "fn", "ia", "ian", "ib", "ibn",
+	"q", "sp", "sd", "c", "p", "pl", "a", "an", "pc", "sf",
+	"pf", "w", "wa", "f", "fn", "ia", "ian", "ib", "ibn",
 	"dl", "dr"
 };
 
 static const command_token_t token_list[] = {
-	QUIT, SET_CUSTOM_PROMPT, SET_DEFAULT_PROMPT, CLEAN_BUFFER, 
+	QUIT, SET_CUSTOM_PROMPT, SET_DEFAULT_PROMPT, CLEAN_BUFFER,
 	PRINT_DEFAULT, PRINT_NUMBERED_LINES, APPEND, APPEND_NL,
 	PRINT_BY_CHAR, SET_FILENAME, PRINT_FILENAME, WRITE_BUF,
 	WRITE_BUF_APPEND, FILL_BUF, FILL_BUF_NL, INSERT_AFTER,

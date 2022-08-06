@@ -80,7 +80,7 @@ void fill_buffer(char* filename, uint8_t new_line_flag)
 		buffer_length = 0;
 	}
 
-	temp_buffer_length = buflen(temp_buffer) + 1;
+	temp_buffer_length = strlen(temp_buffer) + 1;
 	global_buffer = realloc_buffer(global_buffer, buffer_length, temp_buffer_length);
 
 	strncpy(global_buffer + buffer_length, temp_buffer, temp_buffer_length);

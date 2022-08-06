@@ -16,12 +16,12 @@ void append_data(uint8_t new_line_flag)
 	input_buffer = read_from_stream(stdin, DONT_SKIP_NEW_LINE);
 	while(strcmp(input_buffer, ".") != 0) {
 		if(is_buffer_empty(global_buffer) == true) {
-			input_buffer_size = buflen(input_buffer) + 1;
+			input_buffer_size = strlen(input_buffer) + 1;
 			global_buffer = alloc_buffer(input_buffer_size);
 
 			strncpy(global_buffer, input_buffer, input_buffer_size);
 		} else {
-			input_buffer_size = buflen(input_buffer) + 1;
+			input_buffer_size = strlen(input_buffer) + 1;
 			buffer_size = get_buffer_size(global_buffer);
 
 			global_buffer = realloc_buffer(global_buffer, buffer_size, input_buffer_size);
