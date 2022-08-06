@@ -19,11 +19,9 @@ char* global_buffer = NULL;
 char* global_filename = NULL;
 bool is_data_saved = true;
 
-int main(int argc, char **argv)
+static void parse_arguments(int argc, char **argv)
 {
 	int result;
-	tokens_t token = { UNKNOWN_TYPE, UNKNOWN_TOKEN };
-	char* input_buffer = NULL;
 
 	while((result = getopt(argc, argv, "hvf:")) != -1) {
 		switch(result) {
@@ -41,6 +39,12 @@ int main(int argc, char **argv)
 			break;
 		}
 	}
+}
+
+static void editor_loop(void)
+{
+	tokens_t token = { UNKNOWN_TYPE, UNKNOWN_TOKEN };
+	char* input_buffer = NULL;
 
 	while(1) {
 		print_prompt();
@@ -55,5 +59,13 @@ int main(int argc, char **argv)
 	}
 
 	free_buffer_pointers();
+}
+
+int main(int argc, char **argv)
+{
+	parse_arguments(argc, argv);
+
+	editor_loop();
+
 	return 0;
 }
