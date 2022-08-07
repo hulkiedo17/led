@@ -35,21 +35,19 @@ help_msg() {
 	printf "\t-h - prints help message\n"
 }
 
-check_options() {
-	if [ -z "$*" ]; then
-		release
-		exit 0
-	fi
+if [ -z "$*" ]; then
+	release
+	exit 0
+fi
 
-	while getopts "drch" opt; do
-		case $opt in
-			d) debug ;;
-			r) release ;;
-			c) clean ;;
-			h) help_msg ;;
-			*) echo "unknown option" ;;
-		esac
-	done
-}
+while getopts "drch" opt; do
+	case $opt in
+		d) debug ;;
+		r) release ;;
+		c) clean ;;
+		h) help_msg ;;
+		*) echo "unknown option" ;;
+	esac
+done
 
-check_options "$@"
+exit 0

@@ -10,9 +10,9 @@ char* read_from_stream(FILE* stream, uint8_t new_line_flag)
 		fail(stderr, "error: null stream pointer\n");
 	}
 
-	int input_buffer_size = IBUF_SIZE;
 	int c;
-	int position = 0;
+	size_t input_buffer_size = IBUF_SIZE;
+	size_t position = 0;
 	char* input_buffer = calloc(input_buffer_size, sizeof(char));
 	if(input_buffer == NULL) {
 		fail(stderr, "error: allocation error for input buffer\n");
@@ -26,14 +26,14 @@ char* read_from_stream(FILE* stream, uint8_t new_line_flag)
 				input_buffer[position] = '\0';
 				return input_buffer;
 			} else {
-				input_buffer[position] = c;
+				input_buffer[position] = (char)c;
 			}
 		} else if(new_line_flag == DONT_SKIP_NEW_LINE) {
 			if(c == EOF || c == '\n') {
 				input_buffer[position] = '\0';
 				return input_buffer;
 			} else {
-				input_buffer[position] = c;
+				input_buffer[position] = (char)c;
 			}
 		} else {
 			fail(stderr, "error: invalid value for new_line_flag\n");

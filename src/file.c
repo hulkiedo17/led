@@ -26,7 +26,8 @@ void save_buffer(char* filename, const char* mode)
 	char* current_filename = NULL;
 	size_t buffer_length;
 
-	if((buffer_length = get_buffer_size(global_buffer)) == 0) {
+	buffer_length = get_buffer_size(global_buffer);
+	if(buffer_length == 0) {
 		printf("buffer is empty\n");
 		return;
 	}
@@ -56,7 +57,7 @@ void save_buffer(char* filename, const char* mode)
 
 void fill_buffer(char* filename, uint8_t new_line_flag)
 {
-	int buffer_length, temp_buffer_length;
+	size_t buffer_length, temp_buffer_length;
 	char* temp_buffer = NULL;
 	char* current_filename = NULL;
 	FILE* fp = NULL;
@@ -76,9 +77,7 @@ void fill_buffer(char* filename, uint8_t new_line_flag)
 	temp_buffer = read_from_stream(fp, SKIP_NEW_LINE);
 	fclose(fp);
 
-	if((buffer_length = get_buffer_size(global_buffer)) == -1) {
-		buffer_length = 0;
-	}
+	buffer_length = get_buffer_size(global_buffer);
 
 	temp_buffer_length = strlen(temp_buffer) + 1;
 	global_buffer = realloc_buffer(global_buffer, buffer_length, temp_buffer_length);
